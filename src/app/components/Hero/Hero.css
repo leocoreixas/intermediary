@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.parent-element {
+  height: 100%;
+}
+
+.home {
+  min-height: 75vh;
+}
+.contact{
+  min-height: 80vh;
+}
+.about{
+  min-height: 80vh;
+}
+
+.hero-banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-height: 700px;
+}
+.hero-container {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hero-title {
+  color: white;
+  font-size: 3rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.hero-subtitle {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.home-button{
+  background-color: #007bff;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+  text-decoration: none; 
+}
+
+.home-button:hover {
+  background-color: #0062cc;
+}
+
+.about-button{
+  background-color: #ebd807;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+  text-decoration: none; 
+}
+
+.about-button:hover {
+  background-color: #faf18f;
+}
+
+.contact-button{
+  background-color: #417c00;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+  text-decoration: none; 
+}
+
+.contact-button:hover {
+  background-color: #6c9e36;
+}

@@ -1,0 +1,47 @@
+.about-us {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: -70px;
+}
+.about-us-title {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  margin-top: -50px;
+}
+.team-members {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.team-member {
+  width: 30%;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.team-member img {
+  width: 100%;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.team-member h3 {
+  margin-bottom: 0.5rem;
+}
+
+.team-member p {
+  margin-bottom: 0;
+  color: #888;
+}
+
+.meet-the-team {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
