@@ -4,7 +4,6 @@ import Home from './routes/Home/Home';
 import About from './routes/About/About';
 import Contact from './routes/Contact/Contact';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import SideNavBar from './components/SideNavbar/SideNavbar';
 
 const Page = () => {
   return (
@@ -16,7 +15,6 @@ const Page = () => {
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
-      {/* <SideNavBar />  */}
     </BrowserRouter>
 
   );
