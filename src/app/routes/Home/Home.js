@@ -4,7 +4,7 @@ import Navbar from '@/app/components/Navbar/Navbar';
 import homeImg from '../../assets/home-page-banner.png'
 import GetStarted from '../../components/GetStarted/GetStarted';
 import Footer from '../../components/Footer/Footer';
-
+import Sidebar from '../../components/SideBar/SideBar';
 function Home() {
   return (
     <>

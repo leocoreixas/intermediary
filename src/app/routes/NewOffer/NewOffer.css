@@ -1,0 +1,49 @@
+.container-new-offer-page {
+  display: flex;
+}
+
+.container-new-offer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+.add-offer-button {
+  width: 50px;
+  height: 50px;
+  background-color: #fdad00;
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.add-offer-button:hover {
+  background-color: #f7ca69;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 2px 2px #ccc;
+  padding: 20px;
+  width: 300px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

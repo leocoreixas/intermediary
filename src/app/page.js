@@ -4,6 +4,9 @@ import Home from './routes/Home/Home';
 import About from './routes/About/About';
 import Contact from './routes/Contact/Contact';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import NewOffer from './routes/NewOffer/NewOffer';
+import ListOffers from './routes/ListOffers/ListOffers';
+import Settings from './routes/Settings/Settings';
 
 const Page = () => {
   return (
@@ -13,6 +16,9 @@ const Page = () => {
           <Route path="/" element={<Home />} />
           <Route path="/info" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/new-offer" element={<NewOffer />} />
+          <Route path="/list-offers" element={<ListOffers />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
     </BrowserRouter>

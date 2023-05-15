@@ -39,8 +39,9 @@ const Navbar = () => {
           )
         })}
         <li>
-          {/* {!data ? <ConnectMetaMask sendData={handleChildData} /> : ''} */}
-          <ConnectMetaMask sendData={handleChildData} />
+          <Link to='/new-offer'>
+            <ConnectMetaMask sendData={handleChildData} />
+          </Link>
         </li>
       </ul>
     </nav>
