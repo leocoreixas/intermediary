@@ -34,16 +34,19 @@ const SideBar = () => {
 						<span></span>
 						<span></span>
 					</button>
-					
+
 				</div>
 				<div className="nav-menu-user">
-						{isExpanded && <h3 className="intermediary-subtitle"><FontAwesomeIcon className="user-icon" icon={faUser} />Hello, User !</h3>}
-					</div>
+					{isExpanded && <h3 className="intermediary-subtitle"><FontAwesomeIcon className="user-icon" icon={faUser} />Hello, User !</h3>}
+				</div>
 				<div className="nav-menu-sidebar">
 					{MenuItems.map(({ text, icon, iconStyle, path, key }) => (
-						<Link key={key} to={path} className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}>
-
-
+						<Link
+							key={key}
+							to={path}
+							className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
+							title={text}
+						>
 							{isExpanded ? <p><FontAwesomeIcon className={iconStyle} icon={icon} />{text}</p> :
 								<FontAwesomeIcon className={iconStyle} icon={icon} />}
 						</Link>
