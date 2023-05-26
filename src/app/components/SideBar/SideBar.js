@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 const SideBar = () => {
 	const [isExpanded, setExpendState] = useState(false);
-	const logOutFooter = MenuItems.find(item => item.icon == 'Logout');
 	return (
 		<div
 			className={

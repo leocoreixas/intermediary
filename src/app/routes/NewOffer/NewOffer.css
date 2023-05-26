@@ -34,16 +34,110 @@ h1 {
 }
 
 .card {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 2px 2px #ccc;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 300px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.button-create-form {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #d4d109;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.button-create-form {
+  background-color: #f8b92f;
+}
+
+
+.card {
+  width: 500px;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
 }
 
 .card-content {
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+}
+
+.name-input-label,
+.description-input-label,
+.value-input-label,
+.image-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.name-input-form,
+.description-input-form,
+.value-input-form,
+.file-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-create-form {
+  margin-top: 1rem;
+}
+
+.button-create-form:hover{
+  background-color: #facd6c;
+}
+
+
+.navbar-info-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  background: #ffffff;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  margin-right: 25px;
+  margin-top: 15px;
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.navbar-info-logo {
+  display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 20px;
+  margin-right: 20px;
 }
+
+.navbar-info-alert{
+  margin-left: 10px;
+ }
+ .navbar-info-alert:hover{
+  cursor: pointer;
+  color: #f8b92f;
+ }

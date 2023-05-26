@@ -1,14 +1,13 @@
 .container-list-page {
     display: flex;
     flex-direction: row;
-    min-height: 100vh;
   }
   
   .container-list {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    margin-top: 50px;
     width: 100%;
     padding: 30px;
   }
@@ -58,4 +57,19 @@
   .delete-offer-button {
     background-color: #e74c3c;
     color: white;
+  }
+
+  .ellipsis-vertical-menu{
+    display: flex;
+    align-items: center;
+  }
+
+  .data-table{
+    width: 90%;
+  }
+
+  .data-table-input{
+    width: 30%;
+    margin-bottom: 10px;
+    height: 35px;
   }

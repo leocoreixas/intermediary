@@ -12,6 +12,7 @@ const Navbar = () => {
   const handleChildData = (childData) => {
     setData(childData);
     data = childData;
+    localStorage.setItem('user_id', data);
     console.log(childData);
   };
 

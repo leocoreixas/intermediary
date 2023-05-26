@@ -1,51 +1,23 @@
-.container-settings-page {
-  display: flex;
+.settings-page {
+  padding: 20px;
 }
 
-.container-settings {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-}
-
-h1 {
-  font-size: 36px;
+.page-title {
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 500px;
-}
-
-label {
-  font-size: 20px;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  padding: 10px;
+.section-title {
   font-size: 18px;
-  border: none;
-  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
 }
 
-button[type="submit"] {
-  padding: 10px;
-  font-size: 18px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
+.user-info-container {
+  background-color: #f5f5f5;
+  padding: 20px;
   border-radius: 5px;
-  cursor: pointer;
 }
 
-button[type="submit"]:hover {
-  background-color: #0069d9;
+.user-info-container p {
+  margin: 5px 0;
 }
