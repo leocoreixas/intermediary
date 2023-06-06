@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import DataTable from "react-data-table-component"
 import axios, * as others from 'axios';
 import web3 from 'web3';
-import ActionsCell from './ActionsCell';
+import ActionsCell from '../ListAllInspectOffers/ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import 'ListInspectReOffers.css'
+import './ListInspectReOffers.css'
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";
@@ -72,9 +72,6 @@ function ListInspectReOffers() {
                 user_id: localStorareUser
             }
             const stringToEncode = JSON.stringify(payload);
-
-            const encodedHex = web3.utils.asciiToHex(stringToEncode);
-
             const url = `${INSPECT_URL}/${stringToEncode}`;
 
             let config = {

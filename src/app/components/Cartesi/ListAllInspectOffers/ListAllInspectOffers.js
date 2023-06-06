@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import { InputFacet__factory } from "@cartesi/rollups";
 import { useToast } from "@chakra-ui/react";
 import DataTable from "react-data-table-component"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import axios, * as others from 'axios';
 import web3 from 'web3';
 import ActionsCell from './ActionsCell';
@@ -81,9 +76,6 @@ function ListAllInspectOffers() {
                 user_id: localStorareUser
             }
             const stringToEncode = JSON.stringify(payload);
-
-            const encodedHex = web3.utils.asciiToHex(stringToEncode);
-
             const url = `${INSPECT_URL}/${stringToEncode}`;
 
             let config = {

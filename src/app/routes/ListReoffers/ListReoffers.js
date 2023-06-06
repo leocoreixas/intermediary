@@ -1,4 +1,4 @@
-import './ListOffers.css';
+import './ListReoffers.css';
 import Footer from '../../components/Footer/Footer';
 import SideBar from '@/app/components/SideBar/SideBar';
 import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
