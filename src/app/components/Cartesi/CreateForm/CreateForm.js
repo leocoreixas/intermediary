@@ -24,7 +24,7 @@ function CreateForm() {
     const localStorareUser = localStorage.getItem('user_id');
 
     const handleImageChange = (e) => {
-        debugger
+        
         const files = e.target.files;
         const fileList = Array.from(files);
         setImages((prevImages) => [...prevImages, ...fileList]);
@@ -64,20 +64,20 @@ function CreateForm() {
             );
             const input = {
                 function_id: 1,
-                needToNotice: true,
+                needToNotice: false,
                 name,
                 description,
                 image,
                 user_id: localStorareUser,
                 proposer_id: null,
-                value,
+                offer_value: value,
                 status: 'pending',
                 ended: false,
                 created_at: new Date(),
                 updated_at: null,
                 ended_at: null,
             }
-            debugger
+            
             const inputString = JSON.stringify(input);
             // Encode the input
             const inputBytes = ethers.utils.isBytesLike(inputString)

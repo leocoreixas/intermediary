@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import { InputFacet__factory } from "@cartesi/rollups";
-import { useToast } from "@chakra-ui/react";
 import DataTable from "react-data-table-component"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import axios, * as others from 'axios';
 import web3 from 'web3';
 import ActionsCell from './ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import 'ListInspectReOffers.css'
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";
-//const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
-function ListAllInspectOffers() {
-    const [value, setValue] = useState("");
-    const [accountIndex] = useState(0);
-    const toast = useToast();
+function ListInspectReOffers() {
     const [loading, setLoading] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
@@ -169,6 +160,6 @@ function ListAllInspectOffers() {
     );
 }
 
-export default ListAllInspectOffers;
+export default ListInspectReOffers;
 
 

@@ -1,7 +1,8 @@
 import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
-import { faListOl } from '@fortawesome/free-solid-svg-icons';
+import { faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { faBarsProgress } from '@fortawesome/free-solid-svg-icons';
 export const MenuItems = [
     {
         key: 1,
@@ -19,13 +20,20 @@ export const MenuItems = [
     },
     {
         key: 3,
+        text: "In progress",
+        icon: faBarsProgress,
+        iconStyle: "icon-style",
+        path: "/list-offers"
+    },
+    {
+        key: 4,
         text: "Offers history",
-        icon: faListOl,
+        icon: faDatabase,
         iconStyle: "icon-style",
         path: "/historical"
     },
     {
-        key: 3,
+        key: 5,
         text: "Settings",
         icon: faGear,
         iconStyle: "icon-style",

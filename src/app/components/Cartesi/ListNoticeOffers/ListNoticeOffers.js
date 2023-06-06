@@ -3,8 +3,9 @@ import { useToast } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import DataTable from "react-data-table-component"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import ActionsCell from '../ListAllInspectOffers/ActionsCell';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 
 
 const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
@@ -14,40 +15,63 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const CustomButtonPending = styled(Button)`
+    font-weight: bold;
+    background-color: cornsilk;
+    color: black;`;
+
+const CustomButtonAccepted = styled(Button)`
+    font-weight: bold;
+    background-color: rgb(16 255 0 / 26%);
+    color: black;`;
+const customStyles = {
+  table: {
+    style: {
+      border: "1px solid black",
+      borderRadius: "3px",
+    },
+  },
+};
 const Columns = [
   {
-    name: "ID",
-    selector: (row) => row.id,
-    sortable: true,
+    name: "User ID",
+    selector: (row) => row.user_id,
   },
   {
-    name: "Name",
+    name: "Product Name",
     selector: (row) => row.name,
-    sortable: true,
   },
   {
     name: "Value",
     selector: (row) => row.value,
-    sortable: true,
   },
   {
     name: "Created At",
-    selector: (row) => row.created_at,
-    sortable: true,
+    selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : row.created_at),
   },
   {
     name: "Description",
     selector: (row) => row.description,
-    sortable: true,
   },
   {
     name: "Status",
-    selector: (row) => row.status,
-    sortable: true,
+    cell: (row) => (
+      <>
+        {row.status === 'pending' ? (
+          <CustomButtonPending variant="outlined" disabled>
+            {row.status}
+          </CustomButtonPending>
+        ) : (
+          <CustomButtonAccepted variant="outlined" disabled>
+            {row.status}
+          </CustomButtonAccepted>
+        )}
+      </>
+    ),
   },
   {
     name: "Actions",
-    cell: () => <FontAwesomeIcon className="ellipsis-vertical-menu" icon={faEllipsisVertical} />,
+    cell: (row) => <ActionsCell row={row} />,
   },
 ];
 
@@ -86,7 +110,6 @@ function OffersList() {
     variables: { cursor: null },
   });
   const handleFilter = (e) => {
-    debugger
     const keyword = e.target.value.toLowerCase();
     if (keyword === "") {
       refetchData();
@@ -109,7 +132,6 @@ function OffersList() {
     setLoading(true);
     setError(null);
     setDataNotice([]);
-
     client
       .query({
         query: GET_NOTICES,
@@ -178,7 +200,7 @@ function OffersList() {
         data={dataNotice}
         progressPending={loading}
         paginationRowsPerPageOptions={[5, 10]}
-        selectableRows
+        customStyles={customStyles}
         pagination
       />
     </div>

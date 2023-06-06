@@ -8,6 +8,7 @@ import NewOffer from './routes/NewOffer/NewOffer';
 import ListOffers from './routes/ListOffers/ListOffers';
 import Settings from './routes/Settings/Settings';
 import Historical from './routes/Historical/Historical';
+import ListReOffers from './routes/ListReoffers/ListReoffers';
 
 const Page = () => {
   return (
@@ -19,6 +20,7 @@ const Page = () => {
           <Route path="/contact" element={<Contact />} />
           <Route path="/new-offer" element={<NewOffer />} />
           <Route path="/list-offers" element={<ListOffers />} />
+          <Route path="/list-reoffers" element={<ListReOffers />} />
           <Route path="/historical" element={< Historical />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
