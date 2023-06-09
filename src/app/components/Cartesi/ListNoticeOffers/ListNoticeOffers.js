@@ -6,6 +6,8 @@ import DataTable from "react-data-table-component"
 import ActionsCell from '../ListAllInspectOffers/ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 
 const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
@@ -43,11 +45,15 @@ const Columns = [
   },
   {
     name: "Value",
-    selector: (row) => row.value,
+    selector: (row) => row.value || row.offer_value,
   },
   {
     name: "Created At",
     selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : row.created_at),
+  },
+  {
+    name: "Type",
+    selector: (row) => row.selectedType,
   },
   {
     name: "Description",
@@ -104,6 +110,9 @@ function OffersList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dataNotice, setDataNotice] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const typeOptions = [...new Set(dataNotice.map((item) => item.selectedType))];
+
 
   // Retrieve notices
   const { loading: queryLoading, error: queryError, data } = useQuery(GET_NOTICES, {
@@ -132,6 +141,7 @@ function OffersList() {
     setLoading(true);
     setError(null);
     setDataNotice([]);
+    setSelectedFilter("");
     client
       .query({
         query: GET_NOTICES,
@@ -151,15 +161,6 @@ function OffersList() {
       .catch((err) => {
         setError(err);
         setLoading(false);
-        toast({
-          title: "Error querying Query Server",
-          description: `Check browser console for details`,
-          status: "error",
-          duration: 20000,
-          isClosable: true,
-          position: "top-right",
-        });
-        console.error(`Error querying Query Server: ${JSON.stringify(err)}`);
       });
   };
   // Check query status
@@ -167,22 +168,12 @@ function OffersList() {
     setLoading(queryLoading);
     setError(queryError);
 
-    if (queryError) {
-      toast({
-        title: "Error querying Query Server",
-        description: `Check browser console for details`,
-        status: "error",
-        duration: 20000,
-        isClosable: true,
-        position: "top-right",
-      });
-      console.error(`Error querying Query Server: ${JSON.stringify(queryError)}`);
-    }
   }, [queryLoading, queryError, toast]);
 
   // Update dataNotice when new data is received
   useEffect(() => {
     if (data?.notices?.nodes) {
+      debugger
       const newNoticeData = data.notices.nodes.map((node) => {
         const echo = ethers.utils.toUtf8String(node.payload);
         return JSON.parse(echo);
@@ -191,10 +182,56 @@ function OffersList() {
     }
   }, [data]);
 
+  const handleFilterChange = (e) => {
+    const selectedType = e.target.value;
+    if (selectedType === "All") {
+      setSelectedFilter(selectedType);
+      refetchData();
+    } else {
+      setSelectedFilter(selectedType);
+      filterDataByType(selectedType);
+    }
+  };
+
+  const filterDataByType = (selectedType) => {
+    const filteredData = dataNotice.filter(
+      (item) => item.selectedType?.toLowerCase() === selectedType?.toLowerCase()
+    );
+    setDataNotice(filteredData);
+  };
+
   return (
     <div className="data-table">
-      <input className="data-table-input" type="text" placeholder="Search" onChange={handleFilter} />
-
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
+          <Typography variant="h6" gutterBottom>
+            Search by Any Field
+          </Typography>
+          <input
+            className="data-table-input"
+            type="text"
+            placeholder="Search"
+            onChange={handleFilter}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="h6" gutterBottom>
+            Type
+          </Typography>
+          <select
+            value={selectedFilter}
+            onChange={handleFilterChange}
+            style={{ width: "80%", height: "40px" }}
+          >
+            <option value="All">All</option>
+            {typeOptions.map((type, index) => (
+              <option key={index} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </Grid>
+      </Grid>
       <DataTable
         columns={Columns}
         data={dataNotice}

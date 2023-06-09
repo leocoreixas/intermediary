@@ -6,6 +6,8 @@ import ActionsCell from '../ListAllInspectOffers/ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './ListInspectReOffers.css'
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";
@@ -14,9 +16,11 @@ function ListInspectReOffers() {
     const [loading, setLoading] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState("");
+    const typeOptions = [...new Set(data.map((item) => item.selectedType))];
     const CustomButtonPending = styled(Button)`
     font-weight: bold;
-    background-color: cornsilk;`;
+    background-color: azure;`;
 
     const customStyles = {
         table: {
@@ -37,11 +41,15 @@ function ListInspectReOffers() {
         },
         {
             name: "Value",
-            selector: (row) => row.offer_value,
+            selector: (row) => row.offer_value || row.value,
         },
         {
             name: "Created At",
             selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : row.created_at),
+        },
+        {
+            name: "Type",
+            selector: (row) => row.selectedType,
         },
         {
             name: "Description",
@@ -68,7 +76,7 @@ function ListInspectReOffers() {
             setLoading(true);
 
             const payload = {
-                function_id: 1,
+                function_id: 2,
                 user_id: localStorareUser
             }
             const stringToEncode = JSON.stringify(payload);
@@ -139,11 +147,59 @@ function ListInspectReOffers() {
         setLoading(true);
         setData([]);
         handleSubmit();
+        setSelectedFilter("");
+    };
+    const handleFilterChange = (e) => {
+        const selectedType = e.target.value;
+        if (selectedType === "All") {
+            setSelectedFilter(selectedType);
+            refetchData();
+        } else {
+            setSelectedFilter(selectedType);
+            filterDataByType(selectedType);
+        }
+    };
 
+    const filterDataByType = (selectedType) => {
+        const newData = [...data];
+
+        const filteredData = data.filter(
+            (item) => item.selectedType?.toLowerCase() === selectedType?.toLowerCase()
+        );
+        setData(filteredData);
     };
     return (
         <div className="data-table">
-            <input className="data-table-input" type="text" placeholder="Search" onChange={handleFilter} />
+                        <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    <Typography variant="h6" gutterBottom>
+                        Search by Any Field
+                    </Typography>
+                    <input
+                        className="data-table-input"
+                        type="text"
+                        placeholder="Search"
+                        onChange={handleFilter}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Type
+                    </Typography>
+                    <select
+                        value={selectedFilter}
+                        onChange={handleFilterChange}
+                        style={{ width: "80%", height: "40px" }}
+                    >
+                        <option value="All">All</option>
+                        {typeOptions.map((type, index) => (
+                            <option key={index} value={type}>
+                                {type}
+                            </option>
+                        ))}
+                    </select>
+                </Grid>
+            </Grid>
 
             <DataTable
                 columns={Columns}

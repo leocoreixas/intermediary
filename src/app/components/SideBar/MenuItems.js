@@ -23,7 +23,7 @@ export const MenuItems = [
         text: "In progress",
         icon: faBarsProgress,
         iconStyle: "icon-style",
-        path: "/list-offers"
+        path: "/list-reoffers"
     },
     {
         key: 4,

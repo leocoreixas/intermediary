@@ -34,6 +34,7 @@ h1 {
 }
 
 .card {
+  width: 1000px !important;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -67,7 +68,6 @@ label {
   background-color: #f8b92f;
 }
 
-
 .card {
   width: 500px;
   padding: 1rem;
@@ -82,32 +82,13 @@ label {
   gap: 1rem;
 }
 
-.name-input-label,
-.description-input-label,
-.value-input-label,
-.image-input {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.name-input-form,
-.description-input-form,
-.value-input-form,
-.file-input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .button-create-form {
   margin-top: 1rem;
 }
 
-.button-create-form:hover{
+.button-create-form:hover {
   background-color: #facd6c;
 }
-
 
 .navbar-info-container {
   position: absolute;
@@ -134,10 +115,80 @@ label {
   margin-right: 20px;
 }
 
-.navbar-info-alert{
+.navbar-info-alert {
   margin-left: 10px;
- }
- .navbar-info-alert:hover{
+}
+.navbar-info-alert:hover {
   cursor: pointer;
   color: #f8b92f;
- }
+}
+
+.form-column {
+  display: flex;
+  gap: 20px;
+}
+
+.name-input-label,
+.description-input-label,
+.value-input-label,
+.type-input-label,
+.label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.name-input-form,
+.description-input-form,
+.value-input-form,
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+.file-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+.image-input-label{
+  padding-top: 20px;
+
+}
+
+.button-create-form {
+  margin-top: 1rem;
+}
+
+.address-input {
+  flex: 1;
+}
+
+.address-input label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.address-input input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.select-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 1rem;
+}

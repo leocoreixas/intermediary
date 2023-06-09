@@ -11,7 +11,7 @@ function ListOffers() {
                 < NavBarInfo />
                 <SideBar />
                 <div className='container-list'>
-                    <h1>Offers listed:</h1>
+                    <h1>ReOffers:</h1>
                     <ListInspectReOffers />
                 </div>
             </div>

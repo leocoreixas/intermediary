@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { Box, Button, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+const steps = ['Basic Information', 'Address Details'];
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { InputFacet__factory } from "@cartesi/rollups";
-import { Input, Button, useToast } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import './CreateForm.css'
 
 const HARDHAT_DEFAULT_MNEMONIC =
@@ -12,32 +14,59 @@ const HARDHAT_DEFAULT_MNEMONIC =
 const HARDHAT_LOCALHOST_RPC_URL = "http://localhost:8545";
 const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
-// This Component presents an Input field and adds its contents as an Input for the Echo DApp
 function CreateForm() {
-    const [value, setValue] = useState("");
     const [accountIndex] = useState(0);
-    const toast = useToast();
-    const [loading, setLoading] = useState(false);
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [image, setImages] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
+    const [activeStep, setActiveStep] = useState(0);
+    const [value, setValue] = useState(null);
+    const [name, setName] = useState(null);
+    const [description, setDescription] = useState(null);
+    const [image, setImages] = useState([]);
+    const [country, setCountry] = useState(null);
+    const [state, setState] = useState(null);
+    const [city, setCity] = useState(null);
+    const [street, setStreet] = useState(null);
+    const [zipcode, setZipcode] = useState(null);
+    const [complement, setComplement] = useState(null);
+    const [number, setNumber] = useState(null);
+    const [selectedType, setSelectedOption] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleClose = () => {
+        setLoading(false);
+    }
+
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+    }
+    const handleNext = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+    };
 
     const handleImageChange = (e) => {
-        
+
         const files = e.target.files;
         const fileList = Array.from(files);
         setImages((prevImages) => [...prevImages, ...fileList]);
-      };
+    };
 
     function formatCurrency(value) {
-        // Remove non-digit characters
+        if (!value || value === '$') {
+            value = '0.00';
+        }
         const numericValue = value.replace(/[^0-9.]/g, '');
-
-        // Convert to number
         const numberValue = parseFloat(numericValue);
 
-        // Format as currency with dollar symbol and two decimal places
         const formattedValue = numberValue.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -50,80 +79,81 @@ function CreateForm() {
 
     function handleSubmit(event) {
         event.preventDefault();
+
         const sendInput = async () => {
-            setLoading(true);
+            try {
+                setLoading(true);
+                debugger
+                const provider = new JsonRpcProvider(HARDHAT_LOCALHOST_RPC_URL);
+                const signer = ethers.Wallet.fromMnemonic(
+                    HARDHAT_DEFAULT_MNEMONIC,
+                    `m/44'/60'/0'/0/${accountIndex}`
+                ).connect(provider);
+                const inputContract = InputFacet__factory.connect(
+                    LOCALHOST_DAPP_ADDRESS,
+                    signer
+                );
+                debugger
+                const input = {
+                    function_id: 1,
+                    needToNotice: false,
+                    name,
+                    description,
+                    image,
+                    original_offer_id: null,
+                    user_id: localStorareUser,
+                    proposer_id: null,
+                    offer_value: value,
+                    status: 'pending',
+                    ended: false,
+                    created_at: new Date(),
+                    updated_at: null,
+                    ended_at: null,
+                    country,
+                    state,
+                    city,
+                    street,
+                    zipcode,
+                    number,
+                    complement,
+                    selectedType
+                }
 
-            const provider = new JsonRpcProvider(HARDHAT_LOCALHOST_RPC_URL);
-            const signer = ethers.Wallet.fromMnemonic(
-                HARDHAT_DEFAULT_MNEMONIC,
-                `m/44'/60'/0'/0/${accountIndex}`
-            ).connect(provider);
-            const inputContract = InputFacet__factory.connect(
-                LOCALHOST_DAPP_ADDRESS,
-                signer
-            );
-            const input = {
-                function_id: 1,
-                needToNotice: false,
-                name,
-                description,
-                image,
-                user_id: localStorareUser,
-                proposer_id: null,
-                offer_value: value,
-                status: 'pending',
-                ended: false,
-                created_at: new Date(),
-                updated_at: null,
-                ended_at: null,
+                const inputString = JSON.stringify(input);
+                const inputBytes = ethers.utils.isBytesLike(inputString)
+                    ? inputString
+                    : ethers.utils.toUtf8Bytes(inputString);
+
+                const tx = await inputContract.addInput(inputBytes);
+                const receipt = await tx.wait(1);
+                setLoading(false);
+            } catch (error) {
+                setLoading(false);
             }
-            
-            const inputString = JSON.stringify(input);
-            // Encode the input
-            const inputBytes = ethers.utils.isBytesLike(inputString)
-                ? inputString
-                : ethers.utils.toUtf8Bytes(inputString);
 
-            // Send the transaction
-            const tx = await inputContract.addInput(inputBytes);
-            console.log(`transaction: ${tx.hash}`);
-            toast({
-                title: "Offer created",
-                description: "Offer created successfully",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-                position: "top-left",
-            });
-
-            const receipt = await tx.wait(1);
-
-            // Search for the InputAdded event
-            const event = receipt.events?.find((e) => e.event === "InputAdded");
-
-            setLoading(false);
         };
         sendInput();
     }
 
-    let buttonProps = {};
-    if (loading) {
-        buttonProps.isLoading = true;
-    }
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-
-                <div className="card">
-                    <div className="card-content">
-                        <h2>NEW OFFER</h2>
+        <Box sx={{ width: '1000px', }}>
+            <Stepper activeStep={activeStep}>
+                {steps.map((label) => (
+                    <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+            <form >
+                {activeStep === 0 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
                         <label className="name-input-label">
                             Product Name:
                             <input
                                 type="text"
                                 value={name}
-                                className="name-input-form"
                                 onChange={(e) => setName(e.target.value)}
+                                className="name-input-form"
                             />
                         </label>
                         <label className="description-input-label">
@@ -139,11 +169,18 @@ function CreateForm() {
                             <input
                                 type="text"
                                 value={value}
-                                className="value-input-form"
                                 onChange={(e) => setValue(formatCurrency(e.target.value))}
+                                className="value-input-form"
                             />
                         </label>
-                        <label className="image-input">
+                        <label className="type-input-label" htmlFor="selectOption">Product type:</label>
+                        <select className="select-input" value={selectedType} onChange={handleOptionChange}>
+                            <option value="" disabled>Select the type...</option>
+                            <option value="Homemade">Homemade</option>
+                            <option value="Used">Used</option>
+                            <option value="New">New</option>
+                        </select>
+                        <label className="image-input-label">
                             Add Image:
                             <input
                                 type="file"
@@ -154,18 +191,110 @@ function CreateForm() {
                                 onChange={handleImageChange}
                             />
                         </label>
-                        <Button
-                            className="button-create-form"
-                            {...buttonProps}
-                            colorScheme="teal"
-                            variant="outline"
-                            type="submit">
-                            Create Offer
-                        </Button>
-                    </div>
-                </div>
+                    </Box>
+                )}
+                {activeStep === 1 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+                        <div className="address-input">
+
+                            <label className="country-input-label">
+                                Country:
+                                <input
+                                    type="text"
+                                    value={country}
+                                    className="country-input-form"
+                                    onChange={(e) => setCountry(e.target.value)}
+                                />
+                            </label>
+                            <label className="state-input-label">
+                                State:
+                                <input
+                                    type="text"
+                                    value={state}
+                                    className="state-input-form"
+                                    onChange={(e) => setState(e.target.value)}
+                                />
+                            </label>
+                            <label className="city-input-label">
+                                City:
+                                <input
+                                    type="text"
+                                    value={city}
+                                    className="city-input-form"
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
+                            </label>
+                            <label className="street-input-label">
+                                Street:
+                                <input
+                                    type="text"
+                                    value={street}
+                                    className="street-input-form"
+                                    onChange={(e) => setStreet(e.target.value)}
+                                />
+                            </label>
+                            <label className="number-input-label">
+                                Number:
+                                <input
+                                    type="text"
+                                    value={zipcode}
+                                    className="number-input-form"
+                                    onChange={(e) => setNumber(e.target.value)}
+                                />
+                            </label>
+                            <label className="zipcode-input-label">
+                                Zip Code:
+                                <input
+                                    type="text"
+                                    value={zipcode}
+                                    className="zipcode-input-form"
+                                    onChange={(e) => setZipcode(e.target.value)}
+                                />
+                            </label>
+                            <label className="complement-input-label">
+                                Complement:
+                                <input
+                                    type="text"
+                                    value={complement}
+                                    className="complement-input-form"
+                                    onChange={(e) => setComplement(e.target.value)}
+                                />
+                            </label>
+                        </div>
+                    </Box>
+                )}
             </form>
-        </div>
+            <Box sx={{ mt: 2, mb: 1 }}>
+                <React.Fragment>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Button
+                            color="inherit"
+                            disabled={activeStep === 0}
+                            onClick={handleBack}
+                            sx={{ mr: 1 }}
+                        >
+                            Back
+                        </Button>
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        {activeStep === steps.length - 1 ? (
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                <Button onClick={handleSubmit} disabled={loading}>
+                                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Create new offer'}
+                                </Button>
+                                <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
+                                    <MuiAlert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                        Offer created successfully!
+                                    </MuiAlert>
+                                </Snackbar>
+                            </Box>
+                        ) : (
+                            <Button onClick={handleNext}>Next</Button>
+                        )}
+                    </Box>
+                </React.Fragment>
+            </Box>
+        </Box>
     );
 }
 

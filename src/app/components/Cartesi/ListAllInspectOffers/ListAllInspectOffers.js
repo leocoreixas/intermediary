@@ -6,18 +6,20 @@ import web3 from 'web3';
 import ActionsCell from './ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";
 //const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
 function ListAllInspectOffers() {
-    const [value, setValue] = useState("");
-    const [accountIndex] = useState(0);
-    const toast = useToast();
     const [loading, setLoading] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
+    const [selectedFilter, setSelectedFilter] = useState("");
+    const typeOptions = [...new Set(data.map((item) => item.selectedType))];
+
     const CustomButtonPending = styled(Button)`
     font-weight: bold;
     background-color: cornsilk;`;
@@ -46,6 +48,10 @@ function ListAllInspectOffers() {
         {
             name: "Created At",
             selector: (row) => (row.created_at ? new Date(row.created_at).toLocaleString() : row.created_at),
+        },
+        {
+            name: "Type",
+            selector: (row) => row.selectedType,
         },
         {
             name: "Description",
@@ -143,11 +149,60 @@ function ListAllInspectOffers() {
         setLoading(true);
         setData([]);
         handleSubmit();
+        setSelectedFilter("");
 
+    };
+    const handleFilterChange = (e) => {
+        const selectedType = e.target.value;
+        if (selectedType === "All") {
+            setSelectedFilter(selectedType);
+            refetchData();
+        } else {
+            setSelectedFilter(selectedType);
+            filterDataByType(selectedType);
+        }
+    };
+
+    const filterDataByType = (selectedType) => {
+        const newData = [...data];
+
+        const filteredData = data.filter(
+            (item) => item.selectedType?.toLowerCase() === selectedType?.toLowerCase()
+        );
+        setData(filteredData);
     };
     return (
         <div className="data-table">
-            <input className="data-table-input" type="text" placeholder="Search" onChange={handleFilter} />
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    <Typography variant="h6" gutterBottom>
+                        Search by Any Field
+                    </Typography>
+                    <input
+                        className="data-table-input"
+                        type="text"
+                        placeholder="Search"
+                        onChange={handleFilter}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography variant="h6" gutterBottom>
+                        Type
+                    </Typography>
+                    <select
+                        value={selectedFilter}
+                        onChange={handleFilterChange}
+                        style={{ width: "80%", height: "40px" }}
+                    >
+                        <option value="All">All</option>
+                        {typeOptions.map((type, index) => (
+                            <option key={index} value={type}>
+                                {type}
+                            </option>
+                        ))}
+                    </select>
+                </Grid>
+            </Grid>
 
             <DataTable
                 columns={Columns}
