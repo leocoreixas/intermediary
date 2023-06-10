@@ -17,7 +17,7 @@ function ListInspectReOffers() {
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState("");
-    const typeOptions = [...new Set(data.map((item) => item.selectedType))];
+    const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
     const CustomButtonPending = styled(Button)`
     font-weight: bold;
     background-color: azure;`;
@@ -25,7 +25,6 @@ function ListInspectReOffers() {
     const customStyles = {
         table: {
             style: {
-                border: "1px solid black",
                 borderRadius: "3px",
             },
         },
@@ -170,28 +169,25 @@ function ListInspectReOffers() {
     };
     return (
         <div className="data-table">
-                        <Grid container spacing={2}>
+            <Grid container spacing={2}>
                 <Grid item xs={8}>
-                    <Typography variant="h6" gutterBottom>
-                        Search by Any Field
-                    </Typography>
+
                     <input
                         className="data-table-input"
                         type="text"
-                        placeholder="Search"
+                        placeholder="Search by Any Field..."
                         onChange={handleFilter}
+                        style={{  borderRadius: "8px" }}
                     />
                 </Grid>
                 <Grid item xs={4}>
-                    <Typography variant="h6" gutterBottom>
-                        Type
-                    </Typography>
+
                     <select
                         value={selectedFilter}
                         onChange={handleFilterChange}
-                        style={{ width: "80%", height: "40px" }}
+                        placeholder="Filter by Type..."
+                        style={{ width: "80%", height: "40px", borderRadius: "8px" }}
                     >
-                        <option value="All">All</option>
                         {typeOptions.map((type, index) => (
                             <option key={index} value={type}>
                                 {type}

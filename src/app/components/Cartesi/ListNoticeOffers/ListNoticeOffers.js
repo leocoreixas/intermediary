@@ -29,7 +29,6 @@ const CustomButtonAccepted = styled(Button)`
 const customStyles = {
   table: {
     style: {
-      border: "1px solid black",
       borderRadius: "3px",
     },
   },
@@ -111,7 +110,7 @@ function OffersList() {
   const [error, setError] = useState(null);
   const [dataNotice, setDataNotice] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
-  const typeOptions = [...new Set(dataNotice.map((item) => item.selectedType))];
+  const typeOptions = ['All types','Homemade', 'New', 'Used'];
 
 
   // Retrieve notices
@@ -204,26 +203,21 @@ function OffersList() {
     <div className="data-table">
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <Typography variant="h6" gutterBottom>
-            Search by Any Field
-          </Typography>
           <input
             className="data-table-input"
             type="text"
-            placeholder="Search"
+            placeholder="Search by Any Field..."
+            style={{ borderRadius: "8px" }}
             onChange={handleFilter}
           />
         </Grid>
         <Grid item xs={4}>
-          <Typography variant="h6" gutterBottom>
-            Type
-          </Typography>
           <select
             value={selectedFilter}
             onChange={handleFilterChange}
-            style={{ width: "80%", height: "40px" }}
+            placeholder="Filter by Type..."
+            style={{ width: "80%", height: "40px", borderRadius: "8px" }}
           >
-            <option value="All">All</option>
             {typeOptions.map((type, index) => (
               <option key={index} value={type}>
                 {type}

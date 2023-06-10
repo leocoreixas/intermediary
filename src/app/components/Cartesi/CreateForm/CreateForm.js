@@ -8,6 +8,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { InputFacet__factory } from "@cartesi/rollups";
 import './CreateForm.css'
+import CountrySelector from "../../CountrySelector/CountrySelector";
 
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
@@ -16,8 +17,6 @@ const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
 function CreateForm() {
     const [accountIndex] = useState(0);
-    const [open, setOpen] = useState(false);
-    const [openError, setOpenError] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
     const [activeStep, setActiveStep] = useState(0);
     const [value, setValue] = useState(null);
@@ -37,6 +36,29 @@ function CreateForm() {
     const handleClose = () => {
         setLoading(false);
     }
+    const handleCountryChange = selectedOption => {
+        setCountry(selectedOption);
+    };
+
+    const handleNextButton = () => {
+        return (
+            !name ||
+            !description ||
+            !value ||
+            !selectedType
+        )
+    }
+
+    const handleCreateButton = () => {
+        return (
+            !country ||
+            !state ||
+            !city ||
+            !street ||
+            !zipcode ||
+            !number
+        )
+    }
 
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
@@ -48,11 +70,6 @@ function CreateForm() {
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
-
     const handleImageChange = (e) => {
 
         const files = e.target.files;
@@ -76,6 +93,20 @@ function CreateForm() {
 
         return formattedValue;
     }
+    function resetForm () {
+        setValue(null);
+        setName(null);
+        setDescription(null);
+        setImages([]);
+        setCountry(null);
+        setState(null);
+        setCity(null);
+        setStreet(null);
+        setZipcode(null);
+        setComplement(null);
+        setNumber(null);
+        setSelectedOption(null);
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -83,7 +114,6 @@ function CreateForm() {
         const sendInput = async () => {
             try {
                 setLoading(true);
-                debugger
                 const provider = new JsonRpcProvider(HARDHAT_LOCALHOST_RPC_URL);
                 const signer = ethers.Wallet.fromMnemonic(
                     HARDHAT_DEFAULT_MNEMONIC,
@@ -93,7 +123,6 @@ function CreateForm() {
                     LOCALHOST_DAPP_ADDRESS,
                     signer
                 );
-                debugger
                 const input = {
                     function_id: 1,
                     needToNotice: false,
@@ -127,6 +156,8 @@ function CreateForm() {
                 const tx = await inputContract.addInput(inputBytes);
                 const receipt = await tx.wait(1);
                 setLoading(false);
+                resetForm();
+                setActiveStep(0);
             } catch (error) {
                 setLoading(false);
             }
@@ -175,7 +206,7 @@ function CreateForm() {
                         </label>
                         <label className="type-input-label" htmlFor="selectOption">Product type:</label>
                         <select className="select-input" value={selectedType} onChange={handleOptionChange}>
-                            <option value="" disabled>Select the type...</option>
+                            <option selected={true} value="" disabled>Select the type...</option>
                             <option value="Homemade">Homemade</option>
                             <option value="Used">Used</option>
                             <option value="New">New</option>
@@ -199,12 +230,7 @@ function CreateForm() {
 
                             <label className="country-input-label">
                                 Country:
-                                <input
-                                    type="text"
-                                    value={country}
-                                    className="country-input-form"
-                                    onChange={(e) => setCountry(e.target.value)}
-                                />
+                                <CountrySelector value={country} onChange={handleCountryChange} />
                             </label>
                             <label className="state-input-label">
                                 State:
@@ -237,7 +263,7 @@ function CreateForm() {
                                 Number:
                                 <input
                                     type="text"
-                                    value={zipcode}
+                                    value={number}
                                     className="number-input-form"
                                     onChange={(e) => setNumber(e.target.value)}
                                 />
@@ -279,7 +305,7 @@ function CreateForm() {
                         {activeStep === steps.length - 1 ? (
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                                 <Box sx={{ flex: '1 1 auto' }} />
-                                <Button onClick={handleSubmit} disabled={loading}>
+                                <Button onClick={handleSubmit} disabled={handleCreateButton() || loading}>
                                     {loading ? <CircularProgress size={24} color="inherit" /> : 'Create new offer'}
                                 </Button>
                                 <Snackbar open={loading} autoHideDuration={4000} onClose={handleClose}>
@@ -289,7 +315,7 @@ function CreateForm() {
                                 </Snackbar>
                             </Box>
                         ) : (
-                            <Button onClick={handleNext}>Next</Button>
+                            <Button onClick={handleNext} disabled={handleNextButton()}>Next</Button>
                         )}
                     </Box>
                 </React.Fragment>

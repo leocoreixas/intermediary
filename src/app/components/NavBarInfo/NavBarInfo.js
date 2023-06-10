@@ -1,10 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import React, {useState} from "react";
 import { faBell } from '@fortawesome/free-solid-svg-icons';
 import './NavbarInfo.css';
+import DarkModeToggle from "react-dark-mode-toggle";
 
 
 const NavBarInfo = ({ money }) => {
+    const [isDarkMode, setIsDarkMode] = useState(() => false);
     return (
         <div className='navbar-info-container'>
             <nav className='navbar-info'>
