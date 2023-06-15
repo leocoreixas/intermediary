@@ -110,7 +110,7 @@ function OffersList() {
   const [error, setError] = useState(null);
   const [dataNotice, setDataNotice] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
-  const typeOptions = ['All types','Homemade', 'New', 'Used'];
+  const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
 
 
   // Retrieve notices
@@ -172,18 +172,17 @@ function OffersList() {
   // Update dataNotice when new data is received
   useEffect(() => {
     if (data?.notices?.nodes) {
-      debugger
       const newNoticeData = data.notices.nodes.map((node) => {
         const echo = ethers.utils.toUtf8String(node.payload);
         return JSON.parse(echo);
       });
       setDataNotice(newNoticeData);
     }
-  }, [data]);
+  }, []);
 
   const handleFilterChange = (e) => {
     const selectedType = e.target.value;
-    if (selectedType === "All") {
+    if (selectedType === "All types") {
       setSelectedFilter(selectedType);
       refetchData();
     } else {

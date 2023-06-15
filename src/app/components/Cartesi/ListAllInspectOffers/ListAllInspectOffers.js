@@ -18,7 +18,7 @@ function ListAllInspectOffers() {
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState("");
-    const typeOptions = ['All types','Homemade', 'New', 'Used'];
+    const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
 
     const CustomButtonPending = styled(Button)`
     font-weight: bold;
@@ -153,7 +153,7 @@ function ListAllInspectOffers() {
     };
     const handleFilterChange = (e) => {
         const selectedType = e.target.value;
-        if (selectedType === "All") {
+        if (selectedType === "All types") {
             setSelectedFilter(selectedType);
             refetchData();
         } else {

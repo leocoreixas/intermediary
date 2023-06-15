@@ -150,7 +150,7 @@ function ListInspectReOffers() {
     };
     const handleFilterChange = (e) => {
         const selectedType = e.target.value;
-        if (selectedType === "All") {
+        if (selectedType === "All types") {
             setSelectedFilter(selectedType);
             refetchData();
         } else {
