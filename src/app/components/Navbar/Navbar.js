@@ -40,7 +40,7 @@ const Navbar = () => {
           )
         })}
         <li>
-          <Link to='/new-offer'>
+          <Link to='/home'>
             <ConnectMetaMask sendData={handleChildData} />
           </Link>
         </li>

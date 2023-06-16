@@ -12,7 +12,6 @@ function NewOffer() {
                 < NavBarInfo />
                 <SideBar />
                 <div className='container-new-offer'>
-                    <h1>Create a new offer:</h1>
                     <p>Fill out the form below to create a new offer</p>
                     <CreateForm />
                 </div>

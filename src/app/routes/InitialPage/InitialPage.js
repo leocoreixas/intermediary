@@ -1,16 +1,16 @@
-import './Historical.css';
-import Footer from '../../components/Footer/Footer';
+import './InitialPage.css';
+import Footer from '@/app/components/Footer/Footer';
 import SideBar from '@/app/components/SideBar/SideBar';
 import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
-import ListNotice from '../../components/Cartesi/ListNoticeOffers/ListNoticeOffers';
-function Historical() {
+import ListInitialPage from '@/app/components/Cartesi/ListHome/ListHome';
+function InitialPage() {
     return (
         <>
             <div className='container-list-page'>
                 < NavBarInfo />
                 <SideBar />
                 <div className='container-list'>
-                    < ListNotice />
+                    < ListInitialPage />
                 </div>
             </div>
             <Footer />
@@ -18,4 +18,4 @@ function Historical() {
     );
 }
 
-export default Historical;
+export default InitialPage;

@@ -3,7 +3,16 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { faBarsProgress } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
+
 export const MenuItems = [
+    {
+        key: 0,
+        text: "Home",
+        icon: faHouse,
+        iconStyle: "icon-style",
+        path: "/home"
+    },
     {
         key: 1,
         text: "Create Offer",

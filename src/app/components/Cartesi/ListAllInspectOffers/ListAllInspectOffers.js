@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useToast } from "@chakra-ui/react";
 import DataTable from "react-data-table-component"
 import axios, * as others from 'axios';
 import web3 from 'web3';
@@ -7,7 +6,6 @@ import ActionsCell from './ActionsCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";

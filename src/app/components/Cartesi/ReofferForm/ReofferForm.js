@@ -22,7 +22,6 @@ async function ReofferForm(rows, accountIndex, new_value) {
             LOCALHOST_DAPP_ADDRESS,
             signer
         );
-        debugger
         const input = {
             function_id: 3,
             needToNotice: false,
