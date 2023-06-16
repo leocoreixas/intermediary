@@ -25,6 +25,8 @@ const generateDateRange = () => {
 
 const BarChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
   const [chartData, setChartData] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     fillChart();
@@ -68,7 +70,7 @@ const BarChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="amount" name="offers accepted on the day" barSize={20} fill="#413ea0" />
+          <Bar dataKey="amount" name="All offers accepted on the day" barSize={20} fill="#413ea0" />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

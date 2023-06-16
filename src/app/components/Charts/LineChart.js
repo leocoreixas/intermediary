@@ -102,7 +102,7 @@ const LineChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
           <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
           <Line type="monotone" dataKey="pending" stroke="#8884d8"  />
           <Line type="monotone" dataKey="reoffered" stroke="#061b28" />
-          <Line type="monotone" dataKey="accepted" stroke="#e3c2e9" />
+          <Line type="monotone" dataKey="accepted" stroke="#4edb66" />
         </LineChart>
       </ResponsiveContainer>
     </div>

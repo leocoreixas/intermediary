@@ -55,25 +55,22 @@ function ListHome() {
   const [error, setError] = useState(null);
   const localStorareUser = localStorage.getItem('user_id');
   const [dataNotice, setDataNotice] = useState([]);
-  const [dataInspect, setDataInpesct] = useState([]);
-  const typeOptions = ['Pending', 'Reoffered', 'Completed', 'New', 'Used', 'Homemade'];
+  const [dataInspect, setDataInspect] = useState([]);
   const { loading: queryLoading, error: queryError, data } = useQuery(GET_NOTICES, {
     variables: { cursor: null },
   });
-  const [totalCompleted, setTotalCompleted] = useState(0);
-  const [totalPending, setTotalPending] = useState(0);
-  const [totalReOffered, setTotalReOffered] = useState(0);
-  const [totalNew, setTotalNew] = useState(0);
-  const [totalUsed, setTotalUsed] = useState(0);
-  const [totalHomemade, setTotalHomemade] = useState(0);
-  const [sendData, setSendData] = useState(0);
   const [filterValue, setFilterValue] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
   const handleFilterChange = (value) => {
-        setFilterValue(value); 
+    setFilterValue(value);
   };
+
+  const handleDisableButton = () => {
+    return !startDate || !endDate
+  }
+
+
 
   function handleSubmit() {
     const sendInput = async () => {
@@ -106,7 +103,7 @@ function ListHome() {
             .replace(/'/g, '"'))) : [];
 
 
-        setDataInpesct(arrayOfObjects);
+        setDataInspect(arrayOfObjects);
       } catch (error) {
         console.log(error);
       }
@@ -120,20 +117,8 @@ function ListHome() {
   useEffect(() => {
     handleSubmit()
     refetchData()
-    fillValues()
   }, [])
 
-  const fillValues = () => {
-    setTotalCompleted(dataNotice.filter((item) => item?.status.toLowerCase() == 'accepted').length);
-    setTotalPending(dataInspect.filter((item) => item?.status.toLowerCase() == 'pending').length);
-    setTotalReOffered(dataInspect.filter((item) => item?.status.toLowerCase() == 'reoffered').length);
-    setTotalNew(dataNotice.filter((item) => item?.selectedType.toLowerCase() == 'new').length +
-     dataInspect.filter((item) => item?.selectedType.toLowerCase() == 'new').length);
-    setTotalUsed(dataNotice.filter((item) => item?.selectedType.toLowerCase() == 'used').length +
-     dataInspect.filter((item) => item?.selectedType.toLowerCase() == 'used').length);
-    setTotalHomemade(dataNotice.filter((item) => item?.selectedType.toLowerCase() == 'homemade').length +
-     dataInspect.filter((item) => item?.selectedType.toLowerCase() == 'homemade').length);
-  }
 
   const refetchData = () => {
     setLoading(true);
@@ -179,22 +164,36 @@ function ListHome() {
   }, []);
 
   const handleFilterClick = () => {
-    const newNoticeData = dataNotice.filter((item) => {
-      if (filterValue === 'No filter') {
-        return item;
-      }
-      return item.type === filterValue;
-    });
+    if (dataNotice.length == 0 || dataInspect.length == 0) {
+      handleSubmit()
+      refetchData()
+    }
     if (startDate && endDate) {
-      const newNoticeData2 = newNoticeData.filter((item) => {
-        const date = new Date(item.date);
-        return date >= startDate && date <= endDate;
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      end.setHours(23, 59, 59);
+      const newNoticeData = dataNotice.filter((item) => {
+        const date = new Date(item.created_at);
+        return date >= start && date <= end;
       });
-      setDataNotice(newNoticeData2);
-    } else {
+      const newInspectData = dataInspect.filter((item) => {
+        const date = new Date(item.created_at);
+        return date >= start && date <= end;
+      });
       setDataNotice(newNoticeData);
+      setDataInspect(newInspectData);
+    } else {
+      setDataNotice(dataNotice);
+      setDataInspect(dataInspect);
     }
   };
+
+  const handleResetClick = () => {
+    setStartDate(null);
+    setEndDate(null);
+    handleSubmit()
+    refetchData()
+  }
 
 
   return (
@@ -221,17 +220,28 @@ function ListHome() {
         <Button variant="outlined"
           onClick={handleFilterClick}
           style={{ marginLeft: '25px', marginTop: '5px' }}
+          disabled={handleDisableButton()}
         >
           filter date
         </Button>
+
+        <Button variant="outlined"
+          onClick={handleResetClick}
+          style={{ marginLeft: '25px', marginTop: '5px' }}
+          disabled={!startDate || !endDate}
+        >
+          Reset filter
+        </Button>
+
+
       </div>
       <div className="top-page">
 
-        <LineChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} />
-        <PieChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect}/>
+        <LineChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />
+        <PieChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />
       </div>
       <div className="bottom-page">
-        <BarChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect}/>
+        <BarChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />
       </div>
     </div>
   );
