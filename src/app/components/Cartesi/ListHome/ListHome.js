@@ -72,7 +72,7 @@ function ListHome() {
 
 
 
-  function handleSubmit() {
+  function handleLoad() {
     const sendInput = async () => {
       setLoading(true);
 
@@ -115,7 +115,7 @@ function ListHome() {
   }
 
   useEffect(() => {
-    handleSubmit()
+    handleLoad()
     refetchData()
   }, [])
 
@@ -123,7 +123,7 @@ function ListHome() {
   const refetchData = () => {
     setLoading(true);
     setError(null);
-    setDataNotice([]);
+    debugger
     client
       .query({
         query: GET_NOTICES,
@@ -145,27 +145,10 @@ function ListHome() {
         setLoading(false);
       });
   };
-  // Check query status
-  useEffect(() => {
-    setLoading(queryLoading);
-    setError(queryError);
-
-  }, [queryLoading, queryError, toast]);
-
-  // Update dataNotice when new data is received
-  useEffect(() => {
-    if (data?.notices?.nodes) {
-      const newNoticeData = data.notices.nodes.map((node) => {
-        const echo = ethers.utils.toUtf8String(node.payload);
-        return JSON.parse(echo);
-      });
-      setDataNotice(newNoticeData);
-    }
-  }, []);
 
   const handleFilterClick = () => {
     if (dataNotice.length == 0 || dataInspect.length == 0) {
-      handleSubmit()
+      handleLoad()
       refetchData()
     }
     if (startDate && endDate) {
@@ -191,7 +174,7 @@ function ListHome() {
   const handleResetClick = () => {
     setStartDate(null);
     setEndDate(null);
-    handleSubmit()
+    handleLoad()
     refetchData()
   }
 

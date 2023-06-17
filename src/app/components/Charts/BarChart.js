@@ -29,13 +29,13 @@ const BarChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
   const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
+    console.log('dataNotice', dataNotice);
     fillChart();
-  }, [filterValue, dataNotice, dataInspect]);
+  }, [dataNotice]);
 
   const fillChart = () => {
     const dateRange = generateDateRange();
     const generatedData = [];
-
     for (const date of dateRange) {
       const filteredData = dataNotice.filter(item => {
         const itemDate = new Date(item?.created_at).toISOString().split('T')[0];

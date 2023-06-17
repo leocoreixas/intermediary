@@ -26,8 +26,8 @@ const LineChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
   const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
-    fillChart(filterValue)
-  }, [chartData]);
+    fillChart()
+  }, [dataNotice, dataInspect]);
 
   const fillChart = () => {
     const dateRange = generateDateRange();

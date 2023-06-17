@@ -74,7 +74,7 @@ const PieChartComponent = ({ dataNotice, dataInspect }) => {
 
   return (
     <div>
-      <ResponsiveContainer width="100%" height={300} minWidth={500}>
+      <ResponsiveContainer width="100%" height={300} minWidth={550}>
         <PieChart width={400} height={400}>
           <Pie
             activeIndex={activeIndex}

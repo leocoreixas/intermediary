@@ -162,12 +162,6 @@ function OffersList() {
         setLoading(false);
       });
   };
-  // Check query status
-  useEffect(() => {
-    setLoading(queryLoading);
-    setError(queryError);
-
-  }, [queryLoading, queryError, toast]);
 
   // Update dataNotice when new data is received
   useEffect(() => {

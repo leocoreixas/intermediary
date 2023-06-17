@@ -70,7 +70,7 @@ function ListAllInspectOffers() {
 
 
 
-    function handleSubmit() {
+    function handleLoad() {
         const sendInput = async () => {
             setLoading(true);
 
@@ -90,7 +90,7 @@ function ListAllInspectOffers() {
 
             try {
                 const response = await axios.get(config.url);
-
+                debugger
                 const parsedData = response.data.reports[0].payload
                 const regularString = web3.utils.hexToAscii(parsedData);
                 const arrayOfString = regularString.split("\n");
@@ -114,7 +114,7 @@ function ListAllInspectOffers() {
     }
 
     useEffect(() => {
-        handleSubmit()
+        handleLoad()
     }, [])
 
 
@@ -145,7 +145,7 @@ function ListAllInspectOffers() {
     const refetchData = () => {
         setLoading(true);
         setData([]);
-        handleSubmit();
+        handleLoad();
         setSelectedFilter("");
 
     };
