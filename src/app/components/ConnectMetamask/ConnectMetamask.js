@@ -9,6 +9,12 @@ const Connect = ({sendData}) => {
     const  connectToMetaMask = async () => {
       if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
         let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        let balance = await window.ethereum.request({ method: 'eth_getBalance', params: [accounts[0]] })
+        let balanceDecimal = parseInt(balance, 16) / 10 ** 18;
+        localStorage.setItem('balance', balanceDecimal);
+
+
+        debugger
         window.ethereum.enable().then(() => {
           setConnected(true);
           if (accounts && accounts.length > 0){

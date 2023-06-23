@@ -13,7 +13,6 @@ const Navbar = () => {
     setData(childData);
     data = childData;
     localStorage.setItem('user_id', data);
-    console.log(childData);
   };
 
   return (
@@ -40,7 +39,7 @@ const Navbar = () => {
           )
         })}
         <li>
-          <Link to='/home'>
+          <Link to='/dashboard'>
             <ConnectMetaMask sendData={handleChildData} />
           </Link>
         </li>

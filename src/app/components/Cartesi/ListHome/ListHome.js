@@ -58,6 +58,7 @@ function ListHome() {
   const [dataInspect, setDataInspect] = useState([]);
   const { loading: queryLoading, error: queryError, data } = useQuery(GET_NOTICES, {
     variables: { cursor: null },
+    pollInterval: 500,
   });
   const [filterValue, setFilterValue] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -123,7 +124,6 @@ function ListHome() {
   const refetchData = () => {
     setLoading(true);
     setError(null);
-    debugger
     client
       .query({
         query: GET_NOTICES,
@@ -147,7 +147,7 @@ function ListHome() {
   };
 
   const handleFilterClick = () => {
-    if (dataNotice.length == 0 || dataInspect.length == 0) {
+    if (dataNotice.length == 0 && dataInspect.length == 0) {
       handleLoad()
       refetchData()
     }

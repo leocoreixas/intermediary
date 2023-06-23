@@ -90,7 +90,6 @@ function ListAllInspectOffers() {
 
             try {
                 const response = await axios.get(config.url);
-                debugger
                 const parsedData = response.data.reports[0].payload
                 const regularString = web3.utils.hexToAscii(parsedData);
                 const arrayOfString = regularString.split("\n");

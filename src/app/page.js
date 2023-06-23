@@ -17,7 +17,7 @@ const Page = () => {
       <div className='my-styles'>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/home" element={<InitialPage />} />
+          <Route path="/dashboard" element={<InitialPage />} />
           <Route path="/info" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/new-offer" element={<NewOffer />} />
