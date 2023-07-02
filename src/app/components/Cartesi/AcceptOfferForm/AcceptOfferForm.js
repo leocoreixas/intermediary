@@ -8,7 +8,6 @@ const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 async function AcceptOfferForm(rows, accountIndex) {
     try {
         const localStorareUser = localStorage.getItem('user_id');
-        debugger
         let web3 = new Web3(window.ethereum)
         const inputContract = new web3.eth.Contract(inputFacet.abi, LOCALHOST_DAPP_ADDRESS);
 

@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import { InputFacet__factory } from "@cartesi/rollups";
 import './CreateForm.css'
 import CountrySelector from "../../CountrySelector/CountrySelector";
+import CategoryList from './ServiceType'
 
 const HARDHAT_DEFAULT_MNEMONIC =
     "test test test test test test test test test test test junk";
@@ -30,7 +31,7 @@ function CreateForm() {
     const [zipcode, setZipcode] = useState(null);
     const [complement, setComplement] = useState(null);
     const [number, setNumber] = useState(null);
-    const [selectedType, setSelectedOption] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
@@ -49,6 +50,10 @@ function CreateForm() {
         )
     }
 
+    const handleCategoryClick = (category) => {
+        setSelectedType(category);
+      };
+
     const handleCreateButton = () => {
         return (
             !country ||
@@ -58,10 +63,6 @@ function CreateForm() {
             !zipcode ||
             !number
         )
-    }
-
-    const handleOptionChange = (event) => {
-        setSelectedOption(event.target.value);
     }
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -93,7 +94,7 @@ function CreateForm() {
 
         return formattedValue;
     }
-    function resetForm () {
+    function resetForm() {
         setValue(null);
         setName(null);
         setDescription(null);
@@ -105,7 +106,7 @@ function CreateForm() {
         setZipcode(null);
         setComplement(null);
         setNumber(null);
-        setSelectedOption(null);
+        setSelectedType(null);
     }
 
     function handleSubmit(event) {
@@ -123,6 +124,7 @@ function CreateForm() {
                     LOCALHOST_DAPP_ADDRESS,
                     signer
                 );
+                debugger
                 const input = {
                     function_id: 1,
                     needToNotice: false,
@@ -167,7 +169,7 @@ function CreateForm() {
     }
 
     return (
-        <Box sx={{ width: '1000px', }}>
+        <Box sx={{ width: '1200px', }}>
             <Stepper activeStep={activeStep}>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -179,7 +181,7 @@ function CreateForm() {
                 {activeStep === 0 && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
                         <label className="name-input-label">
-                            Product Name:
+                            <div className="create-input-text">Name:</div>
                             <input
                                 type="text"
                                 value={name}
@@ -188,7 +190,7 @@ function CreateForm() {
                             />
                         </label>
                         <label className="description-input-label">
-                            Description:
+                        <div className="create-input-text">Description:</div>                       
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
@@ -196,7 +198,7 @@ function CreateForm() {
                             ></textarea>
                         </label>
                         <label className="value-input-label">
-                            Value:
+                        <div className="create-input-text">Value:</div>                                                 
                             <input
                                 type="text"
                                 value={value}
@@ -204,15 +206,12 @@ function CreateForm() {
                                 className="value-input-form"
                             />
                         </label>
-                        <label className="type-input-label" htmlFor="selectOption">Product type:</label>
-                        <select className="select-input" value={selectedType} onChange={handleOptionChange}>
-                            <option selected={true} value="" disabled>Select the type...</option>
-                            <option value="Homemade">Homemade</option>
-                            <option value="Used">Used</option>
-                            <option value="New">New</option>
-                        </select>
+                        <div>
+                            <label className="type-input-label" htmlFor="selectOption">Service:</label>
+                            <CategoryList selectedType={selectedType} handleCategoryClick={handleCategoryClick} />
+                        </div>
                         <label className="image-input-label">
-                            Add Image:
+                        <div className="create-input-text">Images:</div>                                                                            
                             <input
                                 type="file"
                                 name="image"

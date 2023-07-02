@@ -95,7 +95,6 @@ label {
   position: absolute;
   top: 0;
   right: 0;
-  width: 1100px;
   background: #ffffff;
   padding: 10px;
   display: flex;
@@ -110,10 +109,14 @@ label {
 
 .navbar-info-logo {
   display: flex;
-  justify-content: center;
   align-items: center;
   font-size: 20px;
   margin-right: 20px;
+}
+
+.navbar-info-logo > span {
+  display: inline-block;
+  margin-right: 10px; /* Adjust this value as needed */
 }
 
 .navbar-info-alert {
@@ -136,6 +139,10 @@ label {
 .label {
   font-weight: bold;
   margin-bottom: 0.5rem;
+  
+}
+.create-input-text{
+  margin-bottom: 10px;
 }
 
 .name-input-form,
@@ -192,4 +199,43 @@ label {
   font-size: 16px;
   color: #333;
   margin-bottom: 1rem;
+}
+
+
+.category-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  text-align: center;
+  width: 50px !important;
+}
+
+.category-name {
+  font-size: 12px; 
+}
+
+.category-item.selected .category-name {
+  font-size: 13px;
+}
+
+.category-icon {
+  margin-bottom: 10px;
+  color: #061b28;
+  
+}
+
+.category-icon:hover {
+  cursor: pointer;
+  color: #f8b92f;
+}
+
+
+.category-icon.selected-icon {
+  color: #fdad00; 
 }

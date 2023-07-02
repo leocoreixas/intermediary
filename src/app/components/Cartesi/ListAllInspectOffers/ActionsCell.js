@@ -73,7 +73,6 @@ export default function ActionsCell({ row }) {
 
     const handleAcceptOffer = async (rows) => {
         setLoading(true);
-        debugger
         await AcceptOfferForm(rows, accountIndex)
         handleLoadingClose();
         handleConfirmClose();
