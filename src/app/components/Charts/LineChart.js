@@ -48,7 +48,6 @@ const LineChartComponent = ({ filterValue, dataNotice, dataInspect, startDate, e
     let dateRange = generateDateRange();
     const generatedData = [];
     const concatData = dataNotice.concat(dataInspect)
-    debugger
     if (startDateFilter && endDateFilter) {
       dateRange = generateDateRange(startDateFilter, endDateFilter, false)
       dateRange = dateRange.filter((item) => {

@@ -144,7 +144,6 @@ function OffersList() {
     setError(null);
     setDataNotice([]);
     setSelectedFilter("");
-    debugger
     client
       .query({
         query: GET_NOTICES,

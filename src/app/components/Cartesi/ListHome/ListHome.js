@@ -149,7 +149,6 @@ function ListHome() {
       handleLoad()
       refetchData()
     }
-    debugger
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
