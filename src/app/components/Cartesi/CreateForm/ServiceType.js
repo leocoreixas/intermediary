@@ -5,17 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTools, faChalkboardTeacher, faCar, faUserTie, faPalette, faCalendarAlt, faTshirt, faHammer, faHeartbeat, faHome } from '@fortawesome/free-solid-svg-icons';
 
 const categories = [
-  { index: 0, name: 'Assistência técnica' },
-  { index: 1, name: 'Aulas' },
+  { index: 0, name: 'Technical Assistance' },
+  { index: 1, name: 'Classes' },
   { index: 2, name: 'Autos' },
-  { index: 3, name: 'Consultoria' },
-  { index: 4, name: 'Design e Tecnologia' },
-  { index: 5, name: 'Eventos' },
-  { index: 6, name: 'Moda e beleza' },
-  { index: 7, name: 'Reformas e reparos' },
-  { index: 8, name: 'Saúde' },
-  { index: 9, name: 'Serviços Domésticos' },
+  { index: 3, name: 'Consulting' },
+  { index: 4, name: 'Design and Technology' },
+  { index: 5, name: 'Events' },
+  { index: 6, name: 'Fashion and Beauty' },
+  { index: 7, name: 'Renovations and Repairs' },
+  { index: 8, name: 'Health' },
+  { index: 9, name: 'Domestic Services' },
 ];
+
 
 const icons = [
   faTools,

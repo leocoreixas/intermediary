@@ -4,11 +4,14 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import DataTable from "react-data-table-component"
 import ActionsCell from '../ListAllInspectOffers/ActionsCell';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { Button, CardActionArea, CardActions } from '@mui/material';
+//import genericImage from '../../assets/generic-image.png';
 
 const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
 
@@ -141,6 +144,7 @@ function OffersList() {
     setError(null);
     setDataNotice([]);
     setSelectedFilter("");
+    debugger
     client
       .query({
         query: GET_NOTICES,
@@ -163,15 +167,8 @@ function OffersList() {
       });
   };
 
-  // Update dataNotice when new data is received
   useEffect(() => {
-    if (data?.notices?.nodes) {
-      const newNoticeData = data.notices.nodes.map((node) => {
-        const echo = ethers.utils.toUtf8String(node.payload);
-        return JSON.parse(echo);
-      });
-      setDataNotice(newNoticeData);
-    }
+    refetchData();
   }, []);
 
   const handleFilterChange = (e) => {
@@ -204,7 +201,7 @@ function OffersList() {
             onChange={handleFilter}
           />
         </Grid>
-        <Grid item xs={4}>
+        {/* <Grid item xs={4}>
           <select
             value={selectedFilter}
             onChange={handleFilterChange}
@@ -217,7 +214,7 @@ function OffersList() {
               </option>
             ))}
           </select>
-        </Grid>
+        </Grid> */}
       </Grid>
       <DataTable
         columns={Columns}

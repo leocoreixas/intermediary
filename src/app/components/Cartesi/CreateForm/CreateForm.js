@@ -5,15 +5,13 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 const steps = ['Basic Information', 'Address Details'];
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
-import { InputFacet__factory } from "@cartesi/rollups";
+import Web3 from "web3";
 import './CreateForm.css'
 import CountrySelector from "../../CountrySelector/CountrySelector";
 import CategoryList from './ServiceType'
+import InputMask from 'react-input-mask';
+import inputFacet from  '../../../contracts/inputFacet.json'
 
-const HARDHAT_DEFAULT_MNEMONIC =
-    "test test test test test test test test test test test junk";
-const HARDHAT_LOCALHOST_RPC_URL = "http://localhost:8545";
 const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
 
 function CreateForm() {
@@ -46,13 +44,13 @@ function CreateForm() {
             !name ||
             !description ||
             !value ||
-            !selectedType
+            (!selectedType && selectedType !== 0)
         )
     }
 
     const handleCategoryClick = (category) => {
         setSelectedType(category);
-      };
+    };
 
     const handleCreateButton = () => {
         return (
@@ -115,16 +113,9 @@ function CreateForm() {
         const sendInput = async () => {
             try {
                 setLoading(true);
-                const provider = new JsonRpcProvider(HARDHAT_LOCALHOST_RPC_URL);
-                const signer = ethers.Wallet.fromMnemonic(
-                    HARDHAT_DEFAULT_MNEMONIC,
-                    `m/44'/60'/0'/0/${accountIndex}`
-                ).connect(provider);
-                const inputContract = InputFacet__factory.connect(
-                    LOCALHOST_DAPP_ADDRESS,
-                    signer
-                );
-                debugger
+                let web3 = new Web3(window.ethereum);
+                const accounts = await web3.eth.getAccounts();
+                const inputContract = new web3.eth.Contract(inputFacet.abi, LOCALHOST_DAPP_ADDRESS);
                 const input = {
                     function_id: 1,
                     needToNotice: false,
@@ -151,12 +142,8 @@ function CreateForm() {
                 }
 
                 const inputString = JSON.stringify(input);
-                const inputBytes = ethers.utils.isBytesLike(inputString)
-                    ? inputString
-                    : ethers.utils.toUtf8Bytes(inputString);
-
-                const tx = await inputContract.addInput(inputBytes);
-                const receipt = await tx.wait(1);
+                const inputHex = web3.utils.utf8ToHex(inputString);
+                const txReceipt = await inputContract.methods.addInput(inputHex).send({ from: localStorareUser })
                 setLoading(false);
                 resetForm();
                 setActiveStep(0);
@@ -190,7 +177,7 @@ function CreateForm() {
                             />
                         </label>
                         <label className="description-input-label">
-                        <div className="create-input-text">Description:</div>                       
+                            <div className="create-input-text">Description:</div>
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
@@ -198,7 +185,7 @@ function CreateForm() {
                             ></textarea>
                         </label>
                         <label className="value-input-label">
-                        <div className="create-input-text">Value:</div>                                                 
+                            <div className="create-input-text">Value:</div>
                             <input
                                 type="text"
                                 value={value}
@@ -211,7 +198,7 @@ function CreateForm() {
                             <CategoryList selectedType={selectedType} handleCategoryClick={handleCategoryClick} />
                         </div>
                         <label className="image-input-label">
-                        <div className="create-input-text">Images:</div>                                                                            
+                            <div className="create-input-text">Images:</div>
                             <input
                                 type="file"
                                 name="image"
@@ -269,8 +256,8 @@ function CreateForm() {
                             </label>
                             <label className="zipcode-input-label">
                                 Zip Code:
-                                <input
-                                    type="text"
+                                <InputMask
+                                    mask="99.999-999" 
                                     value={zipcode}
                                     className="zipcode-input-form"
                                     onChange={(e) => setZipcode(e.target.value)}

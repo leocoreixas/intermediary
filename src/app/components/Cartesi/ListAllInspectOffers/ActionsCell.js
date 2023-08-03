@@ -108,7 +108,6 @@ export default function ActionsCell({ row }) {
 
         return formattedValue;
     }
-
     return (
         <div>
             <div className="select-menu-action">

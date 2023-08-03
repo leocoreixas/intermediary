@@ -10,31 +10,52 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-const generateDateRange = () => {
-  const today = new Date();
+const generateDateRange = (startDate, endDate, needToLimit = true, numDays = 7) => {
   const dateRange = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  for (let i = 6; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
-    dateRange.push(date.toISOString().split('T')[0]);
+  let currentDate = startDate ? new Date(startDate) : new Date(today);
+  if (!startDate) {
+    currentDate.setDate(today.getDate() - numDays +1); 
+  }
+  
+  const lastDate = endDate ? new Date(endDate) : new Date(today);
+  lastDate.setDate(lastDate.getDate() + 1);
+
+  while (currentDate < lastDate) {
+    dateRange.push(currentDate.toISOString().split('T')[0]);
+    currentDate.setDate(currentDate.getDate() + 1); 
+
+    if (needToLimit && dateRange.length >= numDays) {
+      break; 
+    }
   }
 
   return dateRange;
 };
 
-const BarChartComponent = ({ filterValue, dataNotice, dataInspect }) => {
+const BarChartComponent = ({ filterValue, dataNotice, dataInspect, startDate, endDate }) => {
   const [chartData, setChartData] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDateFilter, setStartDate] = useState(null);
+  const [endDateFilter, setEndDate] = useState(null);
 
   useEffect(() => {
-    console.log('dataNotice', dataNotice);
+    setStartDate(startDate);
+    setEndDate(endDate);
     fillChart();
-  }, [dataNotice]);
+  }, [dataNotice, dataInspect, startDate, endDate]);
 
   const fillChart = () => {
-    const dateRange = generateDateRange();
+    let dateRange = generateDateRange();
+    if (startDateFilter && endDateFilter) {
+      dateRange = generateDateRange(startDateFilter, endDateFilter, false)
+      dateRange = dateRange.filter((item) => {
+        const date = new Date(item);
+        const startDateNew = new Date(startDateFilter);
+        return date >= startDateNew.setDate(startDateNew.getDate() - 1) && date <= endDateFilter;
+      })
+    } 
     const generatedData = [];
     for (const date of dateRange) {
       const filteredData = dataNotice.filter(item => {

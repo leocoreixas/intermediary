@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './ListInspectReOffers.css'
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
+import CategoryList from "../CreateForm/ServiceType";
 
 
 const INSPECT_URL = "http://localhost:5005/inspect";
@@ -100,8 +100,6 @@ function ListInspectReOffers() {
                         .replace(/False/g, 'false')
                         .replace(/True/g, 'true')
                         .replace(/'/g, '"'))) : [];
-
-
                 setData(arrayOfObjects);
             } catch (error) {
                 console.log(error);
@@ -177,23 +175,8 @@ function ListInspectReOffers() {
                         type="text"
                         placeholder="Search by Any Field..."
                         onChange={handleFilter}
-                        style={{  borderRadius: "8px" }}
+                        style={{ borderRadius: "8px" }}
                     />
-                </Grid>
-                <Grid item xs={4}>
-
-                    <select
-                        value={selectedFilter}
-                        onChange={handleFilterChange}
-                        placeholder="Filter by Type..."
-                        style={{ width: "80%", height: "40px", borderRadius: "8px" }}
-                    >
-                        {typeOptions.map((type, index) => (
-                            <option key={index} value={type}>
-                                {type}
-                            </option>
-                        ))}
-                    </select>
                 </Grid>
             </Grid>
 

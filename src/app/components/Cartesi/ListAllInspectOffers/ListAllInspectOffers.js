@@ -3,32 +3,32 @@ import DataTable from "react-data-table-component"
 import axios, * as others from 'axios';
 import web3 from 'web3';
 import ActionsCell from './ActionsCell';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { Button } from '@mui/material'
+import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
+import CategoriesEnum from '../../../utils/enums/EnumCategories';
 
 const INSPECT_URL = "http://localhost:5005/inspect";
 //const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
+
 
 function ListAllInspectOffers() {
     const [loading, setLoading] = useState(false);
     const localStorareUser = localStorage.getItem('user_id');
     const [data, setData] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState("");
-    const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 4;
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+
 
     const CustomButtonPending = styled(Button)`
     font-weight: bold;
     background-color: cornsilk;`;
-
-    const customStyles = {
-        table: {
-            style: {
-                borderRadius: "3px",
-            },
-        },
-    };
     const Columns = [
         {
             name: "User ID",
@@ -93,13 +93,53 @@ function ListAllInspectOffers() {
                 const parsedData = response.data.reports[0].payload
                 const regularString = web3.utils.hexToAscii(parsedData);
                 const arrayOfString = regularString.split("\n");
-                const arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) =>
+                let arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) =>
                     JSON.parse(string
                         .replace(/None/g, 'null')
                         .replace(/False/g, 'false')
                         .replace(/True/g, 'true')
                         .replace(/'/g, '"'))) : [];
-
+                if (arrayOfObjects.length > 0) {
+                    arrayOfObjects = arrayOfObjects.map((row) => {
+                        row.image = row.image && row.image.length > 0 ? row.image.split(",") : [];
+                        switch (row.selectedType) {
+                            case '0':
+                                row.selectedType = 'Assistance';
+                                break;
+                            case '1':
+                                row.selectedType = 'Classes';
+                                break;
+                            case '2':
+                                row.selectedType = 'Cars';
+                                break;
+                            case '3':
+                                row.selectedType = 'Consulting';
+                                break;
+                            case '4':
+                                row.selectedType = 'Design and Technology';
+                                break;
+                            case '5':
+                                row.selectedType = 'Events';
+                                break;
+                            case '6':
+                                row.selectedType = 'Fashion and Beauty';
+                                break;
+                            case '7':
+                                row.selectedType = 'Reforms and Repairs';
+                                break;
+                            case '8':
+                                row.selectedType = 'Health';
+                                break;
+                            case '9':
+                                row.selectedType = 'Domestic Services';
+                                break;
+                            default:
+                                break;
+                        }
+                        return row;
+                    }
+                    );
+                }
 
                 setData(arrayOfObjects);
             } catch (error) {
@@ -148,25 +188,13 @@ function ListAllInspectOffers() {
         setSelectedFilter("");
 
     };
-    const handleFilterChange = (e) => {
-        const selectedType = e.target.value;
-        if (selectedType === "All types") {
-            setSelectedFilter(selectedType);
-            refetchData();
-        } else {
-            setSelectedFilter(selectedType);
-            filterDataByType(selectedType);
-        }
+    const handlePageChange = (event, page) => {
+        setCurrentPage(page);
     };
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedData = data.slice(startIndex, endIndex);
 
-    const filterDataByType = (selectedType) => {
-        const newData = [...data];
-
-        const filteredData = data.filter(
-            (item) => item.selectedType?.toLowerCase() === selectedType?.toLowerCase()
-        );
-        setData(filteredData);
-    };
     return (
         <div className="data-table">
             <Grid container spacing={2}>
@@ -179,31 +207,41 @@ function ListAllInspectOffers() {
                         style={{ borderRadius: "8px" }}
                     />
                 </Grid>
-                <Grid item xs={4}>
-
-                    <select
-                        value={selectedFilter}
-                        onChange={handleFilterChange}
-                        placeholder="Filter by Type..."
-                        style={{ width: "80%", height: "40px", borderRadius: "8px" }}
-                    >
-                        {typeOptions.map((type, index) => (
-                            <option key={index} value={type}>
-                                {type}
-                            </option>
-                        ))}
-                    </select>
-                </Grid>
             </Grid>
 
-            <DataTable
-                columns={Columns}
-                data={data}
-                progressPending={loading}
-                paginationRowsPerPageOptions={[5, 10]}
-                customStyles={customStyles}
-                pagination
-            />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                {paginatedData.map((row, index) => (
+                    <Card key={index} sx={{ minWidth: 370, minHeight: 560 }}>
+                        <CardContent>
+                            {Columns.map((column, colIndex) => (
+                                <div key={colIndex}>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {column.name}
+                                    </Typography>
+                                    <Typography>
+                                        {typeof column.selector === 'function'
+                                            ? column.selector(row)
+                                            : (
+                                                <div>
+                                                    <ActionsCell row={row} />
+                                                </div>
+                                            )}
+                                    </Typography>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+            <div className="pagination-list" style={{ marginTop: 20 }}>
+                <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    showFirstButton
+                    showLastButton
+                />
+            </div>
         </div>
     );
 }

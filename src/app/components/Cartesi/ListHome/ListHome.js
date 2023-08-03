@@ -102,8 +102,6 @@ function ListHome() {
             .replace(/False/g, 'false')
             .replace(/True/g, 'true')
             .replace(/'/g, '"'))) : [];
-
-
         setDataInspect(arrayOfObjects);
       } catch (error) {
         console.log(error);
@@ -151,6 +149,7 @@ function ListHome() {
       handleLoad()
       refetchData()
     }
+    debugger
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -221,7 +220,7 @@ function ListHome() {
       <div className="top-page">
 
         <LineChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />
-        <PieChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />
+        {/* <PieChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} /> */}
       </div>
       <div className="bottom-page">
         <BarChartComponent filterValue={filterValue} dataNotice={dataNotice} dataInspect={dataInspect} startDate={startDate} endDate={endDate} />

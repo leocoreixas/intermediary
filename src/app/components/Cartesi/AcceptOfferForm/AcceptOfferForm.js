@@ -9,6 +9,8 @@ async function AcceptOfferForm(rows, accountIndex) {
     try {
         const localStorareUser = localStorage.getItem('user_id');
         let web3 = new Web3(window.ethereum)
+        const accounts = await web3.eth.getAccounts();
+        this.setState({web3, accounts});
         const inputContract = new web3.eth.Contract(inputFacet.abi, LOCALHOST_DAPP_ADDRESS);
 
         const input = {
@@ -39,7 +41,8 @@ async function AcceptOfferForm(rows, accountIndex) {
         const inputString = JSON.stringify(input);
         const inputHex = web3.utils.utf8ToHex(inputString);
         const txReceipt = await inputContract.methods.addInput(inputHex).send({ from: localStorareUser })
-        console.log(txReceipt)
+        const convertedAmount = convertDollarToEthereum(Number(rows.offer_value));
+        this.state.web3.eth.sendTransaction({to: contractAddress, from: this.state.accounts[0], value: convertedAmount});
     } catch (error) {
         console.error("Error occurred while sending input:", error);
         // You can handle the error here
@@ -50,3 +53,11 @@ async function AcceptOfferForm(rows, accountIndex) {
 }
 
 export default AcceptOfferForm;
+
+
+
+function convertDollarToEthereum(amountInUSD) {
+    const exchangeRate = 0.00054
+    const amountInEthereum = amountInUSD * exchangeRate;
+    return amountInEthereum;
+  }
