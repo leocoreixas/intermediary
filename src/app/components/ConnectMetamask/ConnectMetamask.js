@@ -2,29 +2,35 @@ import React, { useState } from "react";
 import Web3 from "web3";
 import Image from 'next/image';
 import metaImg from '../../assets/full-metamask-logo.png';
+import GetBalance from "../Cartesi/GetBalanceWallet/GetBlanceWallet";
 
-const Connect = ({sendData}) => {
-    const [connected, setConnected] = useState(false);
-    
-    const  connectToMetaMask = async () => {
-      if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-        let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-        let balance = await window.ethereum.request({ method: 'eth_getBalance', params: [accounts[0]] })
-        let balanceDecimal = parseInt(balance, 16) / 10 ** 18;
-        localStorage.setItem('balance', balanceDecimal);
-        window.ethereum.enable().then(() => {
-          setConnected(true);
-          if (accounts && accounts.length > 0){
-            sendData(accounts[0]);
-          }
-        }).catch((err) => {
-          console.error(err);
-        });
-      } else {
-        console.error('MetaMask not found');
-      }
-    };
-  
+const Connect = ({ sendData }) => {
+  const [connected, setConnected] = useState(false);
+
+  const connectToMetaMask = async () => {
+    if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      let balance = await getBalance(accounts[0]);
+      localStorage.setItem('balance', balance);
+      window.ethereum.enable().then(() => {
+        setConnected(true);
+        if (accounts && accounts.length > 0) {
+          sendData(accounts[0]);
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+    } else {
+      console.error('MetaMask not found');
+    }
+  };
+
+  const getBalance = async (account) => {
+    const balance = await GetBalance(account);
+    return balance;
+
+  };
+
     return (
       <button className='meta-button' onClick={connectToMetaMask} disabled={connected}>
         <Image
@@ -32,10 +38,10 @@ const Connect = ({sendData}) => {
           src={metaImg}
           alt="Connect to MetaMask"
           width={190}
-          height={35} 
+          height={35}
         />
       </button>
     );
   };
 
-export default Connect;
+  export default Connect;

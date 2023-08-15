@@ -101,6 +101,7 @@ function ListAllInspectOffers() {
                         .replace(/'/g, '"'))) : [];
                 if (arrayOfObjects.length > 0) {
                     arrayOfObjects = arrayOfObjects.map((row) => {
+                        row.selectedType = row.selectedType.toString()
                         row.image = row.image && row.image.length > 0 ? row.image.split(",") : [];
                         switch (row.selectedType) {
                             case '0':

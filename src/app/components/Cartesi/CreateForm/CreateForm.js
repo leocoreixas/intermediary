@@ -4,15 +4,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 const steps = ['Basic Information', 'Address Details'];
-import { JsonRpcProvider } from "@ethersproject/providers";
 import Web3 from "web3";
 import './CreateForm.css'
 import CountrySelector from "../../CountrySelector/CountrySelector";
 import CategoryList from './ServiceType'
 import InputMask from 'react-input-mask';
-import inputFacet from  '../../../contracts/inputFacet.json'
+import { IInputBox__factory } from "@cartesi/rollups/";
 
-const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
+const LOCALHOST_DAPP_ADDRESS = "0x142105FC8dA71191b3a13C738Ba0cF4BC33325e2";
+const LOCALHOST_INPUTBOX_ADDRESS = "0x5a723220579C0DCb8C9253E6b4c62e572E379945";
 
 function CreateForm() {
     const [accountIndex] = useState(0);
@@ -114,8 +114,7 @@ function CreateForm() {
             try {
                 setLoading(true);
                 let web3 = new Web3(window.ethereum);
-                const accounts = await web3.eth.getAccounts();
-                const inputContract = new web3.eth.Contract(inputFacet.abi, LOCALHOST_DAPP_ADDRESS);
+                const inputContract = new web3.eth.Contract(IInputBox__factory.abi, LOCALHOST_INPUTBOX_ADDRESS);
                 const input = {
                     function_id: 1,
                     needToNotice: false,
@@ -143,7 +142,13 @@ function CreateForm() {
 
                 const inputString = JSON.stringify(input);
                 const inputHex = web3.utils.utf8ToHex(inputString);
-                const txReceipt = await inputContract.methods.addInput(inputHex).send({ from: localStorareUser })
+                try {
+                    const txReceipt = await inputContract.methods.addInput(LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
+                    setLoading(false);
+                } catch (error) {
+                    setLoading(false);
+                    console.log(error);
+                }
                 setLoading(false);
                 resetForm();
                 setActiveStep(0);
@@ -257,7 +262,7 @@ function CreateForm() {
                             <label className="zipcode-input-label">
                                 Zip Code:
                                 <InputMask
-                                    mask="99.999-999" 
+                                    mask="99.999-999"
                                     value={zipcode}
                                     className="zipcode-input-form"
                                     onChange={(e) => setZipcode(e.target.value)}

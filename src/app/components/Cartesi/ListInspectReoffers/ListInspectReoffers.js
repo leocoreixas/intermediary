@@ -94,12 +94,18 @@ function ListInspectReOffers() {
                 const parsedData = response.data.reports[0].payload
                 const regularString = web3.utils.hexToAscii(parsedData);
                 const arrayOfString = regularString.split("\n");
-                const arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) =>
-                    JSON.parse(string
+                const arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) => {
+                    const stringModified = string
                         .replace(/None/g, 'null')
+                        .replace(/'/g, '"')
+                        .replace(/\\'/g, '')
                         .replace(/False/g, 'false')
-                        .replace(/True/g, 'true')
-                        .replace(/'/g, '"'))) : [];
+                        .replace(/[\u0080-\uFFFF]/g, function (match) {
+                            return "" + ("" + match.charCodeAt(0).toString(16)).slice(-4);
+                        });
+
+                    return JSON.parse(stringModified);
+                }) : [];
                 setData(arrayOfObjects);
             } catch (error) {
                 console.log(error);
@@ -113,6 +119,7 @@ function ListInspectReOffers() {
 
     useEffect(() => {
         handleSubmit()
+        refetchData()
     }, [])
 
 
@@ -165,6 +172,8 @@ function ListInspectReOffers() {
         );
         setData(filteredData);
     };
+
+
     return (
         <div className="data-table">
             <Grid container spacing={2}>

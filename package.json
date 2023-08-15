@@ -16,7 +16,7 @@
   "dependencies": {
     "@adraffy/ens-normalize": "^1.9.0",
     "@apollo/client": "^3.7.14",
-    "@cartesi/rollups": "^0.8.2",
+    "@cartesi/rollups": "^0.9.1",
     "@chakra-ui/react": "^2.6.1",
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.5",
