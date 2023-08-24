@@ -6,12 +6,14 @@ import GetBalance from "../Cartesi/GetBalanceWallet/GetBlanceWallet";
 
 const Connect = ({ sendData }) => {
   const [connected, setConnected] = useState(false);
+  const [balance, setBalance] = useState('0');
 
   const connectToMetaMask = async () => {
     if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       let accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-      let balance = await getBalance(accounts[0]);
-      localStorage.setItem('balance', balance);
+      let initialBalance = await getBalance(accounts[0]) || '0';
+      setBalance(initialBalance?.toString());
+      localStorage.setItem('balance', initialBalance?.toString());
       window.ethereum.enable().then(() => {
         setConnected(true);
         if (accounts && accounts.length > 0) {
@@ -30,18 +32,17 @@ const Connect = ({ sendData }) => {
     return balance;
 
   };
+  return (
+    <button className='meta-button' onClick={connectToMetaMask} disabled={connected}>
+      <Image
+        className='meta-icon'
+        src={metaImg}
+        alt="Connect to MetaMask"
+        width={190}
+        height={35}
+      />
+    </button>
+  );
+};
 
-    return (
-      <button className='meta-button' onClick={connectToMetaMask} disabled={connected}>
-        <Image
-          className='meta-icon'
-          src={metaImg}
-          alt="Connect to MetaMask"
-          width={190}
-          height={35}
-        />
-      </button>
-    );
-  };
-
-  export default Connect;
+export default Connect;

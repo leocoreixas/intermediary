@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import FunctionsEnum from "../../../utils/enums/FunctionsEnum";
+import FunctionsInspectEnum from "../../../utils/enums/FunctionsInspectEnum";
+import axios from "axios";
+import web3 from "web3";
 const INSPECT_URL = "http://localhost:5005/inspect";
 
 
 async function GetBalance(user_id) {
     const localStorareUser = user_id || localStorage.getItem("user_id");
-
     const payload = {
-        function_id: FunctionsEnum.GET_BALANCE,
+        function_id: FunctionsInspectEnum.GET_BALANCE,
         user_id: localStorareUser
     }
     const stringToEncode = JSON.stringify(payload);
@@ -38,7 +39,7 @@ async function GetBalance(user_id) {
 
             return JSON.parse(stringModified);
         }) : [];
-        setData(arrayOfObjects);
+        return arrayOfObjects.length > 0 ? arrayOfObjects[0].amount : '0';
     } catch (error) {
         console.log(error);
     }
