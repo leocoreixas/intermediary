@@ -95,13 +95,15 @@ function ListHome() {
         const response = await axios.get(config.url);
         const parsedData = response.data.reports[0].payload
         const regularString = web3.utils.hexToAscii(parsedData);
-        const arrayOfString = regularString.split("\n");
+        let arrayOfString = regularString.split("\n");
+        arrayOfString = replaceSpecialCharacters(arrayOfString)
+
         const arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) =>
           JSON.parse(string
             .replace(/None/g, 'null')
             .replace(/False/g, 'false')
             .replace(/True/g, 'true')
-            .replace(/'/g, '"'))) : [];
+            .replace(/'/g, '"'))) : [];       
         setDataInspect(arrayOfObjects);
       } catch (error) {
         console.log(error);
@@ -117,6 +119,11 @@ function ListHome() {
     handleLoad()
     refetchData()
   }, [])
+
+  function replaceSpecialCharacters(data) {
+    const sanitizedData = JSON.parse(JSON.stringify(data).replace(/\\/g, ''));
+    return sanitizedData;
+}
 
 
   const refetchData = () => {

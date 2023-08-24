@@ -54,14 +54,21 @@ const SideBar = () => {
 				</div>
 			</div>
 			<div className="nav-footer">
-				<a
+				<Link
 					className={isExpanded ? "menu-item" : "menu-item menu-item-NX"}
-					href="/"
+					to="/"
 				>
-
-					{isExpanded ? <p className="logout-icon"><FontAwesomeIcon className='icon-style' icon={faRightFromBracket} />LogOut</p> :
-						<p className="logout-icon-NX"><FontAwesomeIcon className='icon-style' icon={faRightFromBracket} /></p>}
-				</a>
+					{isExpanded ? (
+						<p className="logout-icon">
+							<FontAwesomeIcon className='icon-style' icon={faRightFromBracket} />
+							back to home
+						</p>
+					) : (
+						<p className="logout-icon-NX">
+							<FontAwesomeIcon className='icon-style' icon={faRightFromBracket} />
+						</p>
+					)}
+				</Link>
 			</div>
 		</div>
 	);

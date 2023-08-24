@@ -5,19 +5,21 @@ import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ConnectMetaMask from '../../components/ConnectMetamask/ConnectMetamask';
+import Button from '@mui/material/Button';
 
 const Navbar = () => {
   let [data, setData] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
   const handleChildData = (childData) => {
     setData(childData);
-    data = childData;
+    debugger
     localStorage.setItem('user_id', data);
   };
 
   return (
     <nav className='navbar-items'>
-      <h1 className='navbar-logo'>Intermediary</h1>
+      {!data ? <h1 className='navbar-logo' style={ {marginBottom: '25px'}}>Intermediary</h1> : <h1 className='navbar-logo'>Intermediary</h1> }
 
       <div className='menu-icons'>
         <a onClick={() => setIsOpen(!isOpen)}>
@@ -38,11 +40,24 @@ const Navbar = () => {
             </li>
           )
         })}
-        <li>
+        {!data ? (
+          <li>
+            <Link to='/dashboard'>
+              {/* Render the button instead of plain text */}
+              {data !== 'null' ? (
+                <Button variant="contained" color="primary">
+                  Back to dashboard
+                </Button>
+              ) : (
+                'Connect MetaMask'
+              )}
+            </Link>
+          </li>
+        ) : <li>
           <Link to='/dashboard'>
             <ConnectMetaMask sendData={handleChildData} />
           </Link>
-        </li>
+        </li>}
       </ul>
     </nav>
   );
