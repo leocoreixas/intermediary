@@ -76,22 +76,23 @@ function CreateForm() {
         setImages((prevImages) => [...prevImages, ...fileList]);
     };
 
-    function formatCurrency(value) {
-        if (!value || value === '$') {
-            value = '0.00';
+    function formatEthereum(value) {
+        if (!value || value === 'ETH') {
+          value = '0.00';
         }
+        
         const numericValue = value.replace(/[^0-9.]/g, '');
         const numberValue = parseFloat(numericValue);
-
+      
         const formattedValue = numberValue.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+          style: 'currency',
+          currency: 'ETH',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 18, // Ethereum has up to 18 decimal places
         });
-
+      
         return formattedValue;
-    }
+      }
     function resetForm() {
         setValue(null);
         setName(null);
@@ -194,7 +195,7 @@ function CreateForm() {
                             <input
                                 type="text"
                                 value={value}
-                                onChange={(e) => setValue(formatCurrency(e.target.value))}
+                                onChange={(e) => setValue(formatEthereum(e.target.value))}
                                 className="value-input-form"
                             />
                         </label>

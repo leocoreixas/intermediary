@@ -46,7 +46,7 @@ const NavBarInfo = ({ money }) => {
     const handleAddConfirmed = async () => {
         try {
             setIsAddingBalance(true);
-            debugger
+            
             await AddBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
             handleClose();
@@ -75,7 +75,7 @@ const NavBarInfo = ({ money }) => {
         <div className="navbar-info-container">
             <nav className="navbar-info">
                 <h1 className="navbar-info-logo">
-                    <span className="navbar-logo-text">Balance: {balance} Ethereum</span>
+                    <span className="navbar-logo-text">Balance: {balance} ETH</span>
                     <Button
                         variant="contained"
                         onClick={handleOpen}

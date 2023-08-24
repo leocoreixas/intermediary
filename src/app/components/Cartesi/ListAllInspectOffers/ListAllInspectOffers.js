@@ -92,12 +92,14 @@ function ListAllInspectOffers() {
                 const response = await axios.get(config.url);
                 const parsedData = response.data.reports[0].payload
                 const regularString = web3.utils.hexToAscii(parsedData);
-                const arrayOfString = regularString.split("\n");
+                let arrayOfString = regularString.split("\n");
+                arrayOfString = replaceSpecialCharacters(arrayOfString)
                 let arrayOfObjects = arrayOfString && arrayOfString[0].length > 0 ? arrayOfString.map((string) =>
                     JSON.parse(string
                         .replace(/None/g, 'null')
                         .replace(/False/g, 'false')
                         .replace(/True/g, 'true')
+                        .replace('ETHxa', 'ETH - ')
                         .replace(/'/g, '"'))) : [];
                 if (arrayOfObjects.length > 0) {
                     arrayOfObjects = arrayOfObjects.map((row) => {
@@ -141,7 +143,7 @@ function ListAllInspectOffers() {
                     }
                     );
                 }
-
+                
                 setData(arrayOfObjects);
             } catch (error) {
                 console.log(error);
@@ -161,6 +163,11 @@ function ListAllInspectOffers() {
     let buttonProps = {};
     if (loading) {
         buttonProps.isLoading = true;
+    }
+
+    function replaceSpecialCharacters(data) {
+        const sanitizedData = JSON.parse(JSON.stringify(data).replace(/\\/g, ''));
+        return sanitizedData;
     }
 
     const handleFilter = (e) => {
