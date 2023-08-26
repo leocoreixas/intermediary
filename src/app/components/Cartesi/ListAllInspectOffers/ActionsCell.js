@@ -41,6 +41,7 @@ export default function ActionsCell({ row }) {
     const complement = row.complement;
     const number = row.number;
     const selectedType = row.selectedType;
+    const productType = row.productType;
 
     const handleChangeTab = (event, newValue) => {
         setValueTab(newValue);

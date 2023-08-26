@@ -35,6 +35,7 @@ async function ReofferForm(rows, accountIndex, new_value) {
             number: rows.number,
             complement: rows.complement,
             selectedType: rows.selectedType,
+            productType: rows.productType,
         };
         const inputString = JSON.stringify(input);
         const inputHex = web3.utils.utf8ToHex(inputString);

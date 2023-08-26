@@ -143,7 +143,6 @@ function ListAllInspectOffers() {
                     }
                     );
                 }
-                
                 setData(arrayOfObjects);
             } catch (error) {
                 console.log(error);

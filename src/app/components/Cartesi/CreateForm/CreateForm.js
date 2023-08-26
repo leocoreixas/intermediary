@@ -10,6 +10,7 @@ import CountrySelector from "../../CountrySelector/CountrySelector";
 import CategoryList from './ServiceType'
 import InputMask from 'react-input-mask';
 import { IInputBox__factory } from "@cartesi/rollups/";
+import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
 
 const LOCALHOST_DAPP_ADDRESS = "0x142105FC8dA71191b3a13C738Ba0cF4BC33325e2";
 const LOCALHOST_INPUTBOX_ADDRESS = "0x5a723220579C0DCb8C9253E6b4c62e572E379945";
@@ -31,6 +32,7 @@ function CreateForm() {
     const [number, setNumber] = useState(null);
     const [selectedType, setSelectedType] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [productType, setProductType] = useState('sell');
 
     const handleClose = () => {
         setLoading(false);
@@ -78,21 +80,21 @@ function CreateForm() {
 
     function formatEthereum(value) {
         if (!value || value === 'ETH') {
-          value = '0.00';
+            value = '0.00';
         }
-        
+
         const numericValue = value.replace(/[^0-9.]/g, '');
         const numberValue = parseFloat(numericValue);
-      
+
         const formattedValue = numberValue.toLocaleString('en-US', {
-          style: 'currency',
-          currency: 'ETH',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 18, // Ethereum has up to 18 decimal places
+            style: 'currency',
+            currency: 'ETH',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 18, // Ethereum has up to 18 decimal places
         });
-      
+
         return formattedValue;
-      }
+    }
     function resetForm() {
         setValue(null);
         setName(null);
@@ -138,7 +140,8 @@ function CreateForm() {
                     zipcode,
                     number,
                     complement,
-                    selectedType
+                    selectedType,
+                    productType
                 }
 
                 const inputString = JSON.stringify(input);
@@ -202,6 +205,23 @@ function CreateForm() {
                         <div>
                             <label className="type-input-label" htmlFor="selectOption">Service:</label>
                             <CategoryList selectedType={selectedType} handleCategoryClick={handleCategoryClick} />
+                        </div>
+                        <div>
+                            <label className="type-input-label" htmlFor="selectOption">This service is for me to:</label>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+                                <div>
+                                    <RadioGroup
+                                        row
+                                        aria-label="productType"
+                                        name="productType"
+                                        value={productType}
+                                        onChange={(e) => setProductType(e.target.value)}
+                                    >
+                                        <FormControlLabel value="sell" control={<Radio />} label="Sell" />
+                                        <FormControlLabel value="buy" control={<Radio />} label="Buy" />
+                                    </RadioGroup>
+                                </div>
+                            </Box>
                         </div>
                         <label className="image-input-label">
                             <div className="create-input-text">Images:</div>

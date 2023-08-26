@@ -10,13 +10,15 @@ import './NavbarInfo.css';
 import AddBalanceWallet from "../Cartesi/AddBalanceWallet/AddBalanceWallet";
 import GetBalance from "../Cartesi/GetBalanceWallet/GetBlanceWallet";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import ToggleColorMode from "../DarkMode/DarkMode";
+import { Menu, MenuItem } from "@mui/material";
 const NavBarInfo = ({ money }) => {
     const [balance, setBalance] = useState(() => localStorage.getItem('balance') || 0);
     const [user, setUser] = useState(() => localStorage.getItem('user_id'));
     const [open, setOpen] = useState(false); // State to control the main modal
     const [confirmOpen, setConfirmOpen] = useState(false); // State to control the confirmation modal
     const [isAddingBalance, setIsAddingBalance] = useState(false); // State for controlling the spinner
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleOpen = () => {
         setOpen(true);
@@ -28,6 +30,14 @@ const NavBarInfo = ({ money }) => {
 
     const handleConfirmOpen = () => {
         setConfirmOpen(true);
+    };
+
+    const handleAnchorClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleAnchorClose = () => {
+        setAnchorEl(null);
     };
 
     const handleConfirmClose = () => {
@@ -46,7 +56,7 @@ const NavBarInfo = ({ money }) => {
     const handleAddConfirmed = async () => {
         try {
             setIsAddingBalance(true);
-            
+
             await AddBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
             handleClose();
@@ -57,6 +67,22 @@ const NavBarInfo = ({ money }) => {
             alert("An error occurred while adding balance.");
         }
     };
+
+    const handleWithdrawBalance = async () => {
+        try {
+            setIsAddingBalance(true);
+
+            //await AddBalanceWallet(-newBalanceInput);
+            setIsAddingBalance(false);
+            handleClose();
+            handleConfirmClose();
+            await getBalanceAndUpdate();
+        } catch (error) {
+            setIsAddingBalance(false);
+            alert("An error occurred while withdrawing balance.");
+        }
+    };
+
 
 
     const getBalanceAndUpdate = async () => {
@@ -78,8 +104,8 @@ const NavBarInfo = ({ money }) => {
                     <span className="navbar-logo-text">Balance: {balance} ETH</span>
                     <Button
                         variant="contained"
-                        onClick={handleOpen}
-                        disabled={isAddingBalance} 
+                        onClick={handleAnchorClick}
+                        disabled={isAddingBalance}
                         sx={{
                             backgroundColor: "#fdad00",
                             "&:hover": {
@@ -90,9 +116,27 @@ const NavBarInfo = ({ money }) => {
                         {isAddingBalance ? (
                             <CircularProgress size={20} color="inherit" />
                         ) : (
-                            "Add Balance"
+                            "Actions"
                         )}
                     </Button>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleAnchorClose}
+                    >
+                        <MenuItem onClick={() => {
+                            handleAnchorClose();
+                            handleOpen();
+                        }}>
+                            Add Balance
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            handleAnchorClose();
+                            handleWithdrawBalance();
+                        }}>
+                            Withdraw
+                        </MenuItem>
+                    </Menu>
                 </h1>
             </nav>
             <Dialog open={open}
@@ -145,7 +189,7 @@ const NavBarInfo = ({ money }) => {
                     <Button
                         onClick={handleAddConfirmed}
                         style={{ color: "#59a14e" }}
-                        disabled={isAddingBalance} 
+                        disabled={isAddingBalance}
                     >
                         {isAddingBalance ? (
                             <CircularProgress size={20} color="inherit" />

@@ -1,6 +1,6 @@
-import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faBook } from '@fortawesome/free-solid-svg-icons';
 import { faDatabase } from '@fortawesome/free-solid-svg-icons';
 import { faBarsProgress } from '@fortawesome/free-solid-svg-icons';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +16,7 @@ export const MenuItems = [
     {
         key: 1,
         text: "Create Offer",
-        icon: faMoneyBill,
+        icon: faPlus,
         iconStyle: "icon-style",
         path: "/new-offer"
     },
@@ -43,9 +43,9 @@ export const MenuItems = [
     },
     {
         key: 5,
-        text: "Settings",
-        icon: faGear,
+        text: "Tutorial",
+        icon: faBook,
         iconStyle: "icon-style",
-        path: "/settings"
+        path: "/tutorial"
     }
 ];
