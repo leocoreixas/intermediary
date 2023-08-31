@@ -2,24 +2,48 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { MenuItems } from './MenuItems';
 import './Navbar.css';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConnectMetaMask from '../../components/ConnectMetamask/ConnectMetamask';
 import Button from '@mui/material/Button';
 
 const Navbar = () => {
-  let [data, setData] = useState('');
+  const [data, setData] = useState(null);
+  const [connected, setConnected] = useState(false); 
   const [isOpen, setIsOpen] = useState(false);
-
+  
   const handleChildData = (childData) => {
     setData(childData);
-    debugger
-    localStorage.setItem('user_id', data);
+    setConnected(true); 
+    localStorage.setItem('user_id', childData);
   };
+
+  const verifyConnection = () => {
+    debugger
+    if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      window.ethereum.request({ method: 'eth_accounts' })
+        .then((accounts) => {
+          if (accounts && accounts.length > 0) {
+            setData(accounts[0]);
+            localStorage.setItem('user_id', accounts[0]);
+            setConnected(true);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      console.error('MetaMask not found');
+    }
+  };
+
+  useEffect(() => {
+    verifyConnection();
+  }, []);
 
   return (
     <nav className='navbar-items'>
-      {!data ? <h1 className='navbar-logo' style={ {marginBottom: '25px'}}>Intermediary</h1> : <h1 className='navbar-logo'>Intermediary</h1> }
+      {!data ? <h1 className='navbar-logo' style={{ marginBottom: '25px' }}>Intermediary</h1> : <h1 className='navbar-logo'>Intermediary</h1>}
 
       <div className='menu-icons'>
         <a onClick={() => setIsOpen(!isOpen)}>
@@ -40,24 +64,20 @@ const Navbar = () => {
             </li>
           )
         })}
-        {!data ? (
+        {connected && (
           <li>
             <Link to='/dashboard'>
-              {/* Render the button instead of plain text */}
-              {data !== 'null' ? (
-                <Button variant="contained" color="primary">
-                  Back to dashboard
-                </Button>
-              ) : (
-                'Connect MetaMask'
-              )}
+              <Button variant="contained" color="primary">
+                Go to dashboard
+              </Button>
             </Link>
           </li>
-        ) : <li>
-          <Link to='/dashboard'>
+        )}   
+        {!connected && (
+          <li>
             <ConnectMetaMask sendData={handleChildData} />
-          </Link>
-        </li>}
+          </li>
+        )}
       </ul>
     </nav>
   );

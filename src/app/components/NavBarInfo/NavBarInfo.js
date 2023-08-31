@@ -56,7 +56,6 @@ const NavBarInfo = ({ money }) => {
     const handleAddConfirmed = async () => {
         try {
             setIsAddingBalance(true);
-
             await AddBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
             handleClose();
@@ -95,7 +94,22 @@ const NavBarInfo = ({ money }) => {
         getBalanceAndUpdate();
     }, [balance]);
 
-    const [newBalanceInput, setNewBalanceInput] = useState(""); // State for the input value
+    useEffect(() => {
+        debugger
+        const handleAccountsChanged = (accounts) => {
+          if (accounts.length === 0) {
+            setUser(null); // Set user to null when disconnected
+            localStorage.removeItem('user_id');
+            window.location.href = "/";
+          }
+        };
+        window.ethereum.on("accountsChanged", handleAccountsChanged);
+        return () => {
+          window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+        };
+      }, []);
+
+    const [newBalanceInput, setNewBalanceInput] = useState("");
 
     return (
         <div className="navbar-info-container">

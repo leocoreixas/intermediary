@@ -45,7 +45,6 @@ const LineChartComponent = ({ filterValue, dataNotice, dataInspect, startDate, e
   }, [dataNotice, dataInspect, startDate, endDate]);
 
   const fillChart = () => {
-    debugger
     let dateRange = generateDateRange();
     const generatedData = [];
     const concatData = dataNotice.concat(dataInspect)
