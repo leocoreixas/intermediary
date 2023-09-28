@@ -1,8 +1,8 @@
 import './InitialPage.css';
-import Footer from '@/app/components/Footer/Footer';
-import SideBar from '@/app/components/SideBar/SideBar';
-import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
-import ListInitialPage from '@/app/components/Cartesi/ListHome/ListHome';
+import Footer from '../../components/Footer/Footer';
+import SideBar from '../../components/SideBar/SideBar';
+import NavBarInfo from '../../components/NavBarInfo/NavBarInfo';
+import ListInitialPage from '../../components/Cartesi/ListHome/ListHome';
 function InitialPage() {
     return (
         <>

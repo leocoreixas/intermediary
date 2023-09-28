@@ -14,7 +14,8 @@ async function AddBalanceWallet(balance) {
         const ethersContract = new web3.eth.Contract(EtherPortal__factory.abi, LOCALHOST_ETHER_PORTAL_ADDRESS);
         const oneEthereumInWei = web3.utils.toWei(balance, 'ether');
         await ethersContract.methods.depositEther(LOCALHOST_DAPP_ADDRESS, '0x').send({ from: localStorareUser, value: oneEthereumInWei.toString() });
-        const getBalance = localStorage.getItem('balance') ? parseFloat(localStorage.getItem('balance')) + parseFloat(balance) : parseFloat(balance);
+        const queryBalance = await GetBalance(localStorareUser);
+        const getBalance = localStorage.getItem('balance') ? parseFloat(localStorage.getItem('balance')) + parseFloat(queryBalance) : parseFloat(queryBalance);
         localStorage.setItem('balance', getBalance?.toString());
     } catch (error) {
         console.error("Error occurred while sending input:", error);

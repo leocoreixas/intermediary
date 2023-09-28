@@ -1,7 +1,7 @@
 import './ListOffers.css';
 import Footer from '../../components/Footer/Footer';
-import SideBar from '@/app/components/SideBar/SideBar';
-import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
+import SideBar from '../../components/SideBar/SideBar';
+import NavBarInfo from '../../components/NavBarInfo/NavBarInfo';
 import ListAllInspectOffers from '../../components/Cartesi/ListAllInspectOffers/ListAllInspectOffers';
 function ListOffers() {
     return (

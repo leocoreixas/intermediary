@@ -1,8 +1,8 @@
 import './ListReoffers.css';
 import Footer from '../../components/Footer/Footer';
-import SideBar from '@/app/components/SideBar/SideBar';
-import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
-import ListInspectReOffers from '@/app/components/Cartesi/ListInspectReoffers/ListInspectReoffers';
+import SideBar from '../../components/SideBar/SideBar';
+import NavBarInfo from '../../components/NavBarInfo/NavBarInfo';
+import ListInspectReOffers from '../../components/Cartesi/ListInspectReoffers/ListInspectReoffers';
 
 function ListOffers() {
     return (

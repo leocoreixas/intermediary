@@ -1,7 +1,7 @@
 import './Tutorial.css';
 import Footer from '../../components/Footer/Footer';
-import SideBar from '@/app/components/SideBar/SideBar';
-import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
+import SideBar from '../../components/SideBar/SideBar';
+import NavBarInfo from '../../components/NavBarInfo/NavBarInfo';
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 

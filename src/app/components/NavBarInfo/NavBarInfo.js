@@ -8,24 +8,67 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import './NavbarInfo.css';
 import AddBalanceWallet from "../Cartesi/AddBalanceWallet/AddBalanceWallet";
+import GenerateWithdrawBalanceWallet from "../Cartesi/GenerateWithDrawBalance/GenerateWithDrawBalance";
+import WithdrawBalanceWallet from "../Cartesi/WithDrawBalance/WithDrawBalance";
 import GetBalance from "../Cartesi/GetBalanceWallet/GetBlanceWallet";
 import CircularProgress from "@mui/material/CircularProgress";
 import ToggleColorMode from "../DarkMode/DarkMode";
-import { Menu, MenuItem } from "@mui/material";
+import AddBalanceDialog from "./AddBalance";
+import GenerateWithdrawDialog from "./GenerateWithDrawBalance";
+import WithdrawDialog from "./WithDrawBalance";
+import { faCircleInfo, faPlus, faMoneyBillTransfer, } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Menu, MenuItem, Tooltip } from "@mui/material";
 const NavBarInfo = ({ money }) => {
     const [balance, setBalance] = useState(() => localStorage.getItem('balance') || 0);
+    const [voucher, setVoucher] = useState(() => localStorage.getItem('voucher') || 0);
     const [user, setUser] = useState(() => localStorage.getItem('user_id'));
     const [open, setOpen] = useState(false); // State to control the main modal
     const [confirmOpen, setConfirmOpen] = useState(false); // State to control the confirmation modal
     const [isAddingBalance, setIsAddingBalance] = useState(false); // State for controlling the spinner
     const [anchorEl, setAnchorEl] = useState(null);
-
+    const [openGenerateWithDraw, setOpenGenerateWithDraw] = useState(false);
+    const [confirmOpenGenerateWithDraw, setConfirmOpenGenerateWithDraw] = useState(false);
+    const [openWithDraw, setOpenWithDraw] = useState(false);
+    const [confirmOpenWithDraw, setConfirmOpenWithDraw] = useState(false);
     const handleOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleOpenGenerateWithdraw = () => {
+        setOpenGenerateWithDraw(true);
+    };
+
+    const handleCloseGenerateWithdraw = () => {
+        setOpenGenerateWithDraw(false);
+    };
+
+    const handleConfirmOpenGenerateWithdraw = () => {
+        setConfirmOpenGenerateWithDraw(true);
+    };
+
+    const handleConfirmCloseGenerateWithdraw = () => {
+        setConfirmOpenGenerateWithDraw(false);
+    };
+
+    const handleOpenWithdraw = () => {
+        setOpenWithDraw(true);
+    };
+
+    const handleCloseWithdraw = () => {
+        setOpenWithDraw(false);
+    };
+
+    const handleConfirmOpenWithdraw = () => {
+        setConfirmOpenWithDraw(true);
+    };
+
+    const handleConfirmCloseWithdraw = () => {
+        setConfirmOpenWithDraw(false);
     };
 
     const handleConfirmOpen = () => {
@@ -46,6 +89,7 @@ const NavBarInfo = ({ money }) => {
 
     const handleAddBalance = async () => {
         const newBalance = parseFloat(newBalanceInput);
+        debugger
         if (!isNaN(newBalance)) {
             handleConfirmOpen();
         } else {
@@ -67,14 +111,39 @@ const NavBarInfo = ({ money }) => {
         }
     };
 
+    const handleGenerateWithdrawBalance = async () => {
+        try {
+            setIsAddingBalance(true);
+            if (balance == 0) {
+                alert("You don't have balance to generate voucher.");
+                setIsAddingBalance(false);
+                return;
+            }
+            debugger
+            await GenerateWithdrawBalanceWallet(newBalanceInput);
+            setIsAddingBalance(false);
+            handleCloseGenerateWithdraw();
+            handleConfirmOpenGenerateWithdraw();
+            await getBalanceAndUpdate();
+        } catch (error) {
+            setIsAddingBalance(false);
+            alert("An error occurred while withdrawing balance.");
+        }
+    };
+
     const handleWithdrawBalance = async () => {
         try {
             setIsAddingBalance(true);
-
-            //await AddBalanceWallet(-newBalanceInput);
+            if (balance == 0) {
+                alert("You don't have balance to withdraw.");
+                setIsAddingBalance(false);
+                return;
+            }
+            debugger
+            await WithdrawBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
-            handleClose();
-            handleConfirmClose();
+            handleCloseWithdraw();
+            handleConfirmOpenWithdraw();
             await getBalanceAndUpdate();
         } catch (error) {
             setIsAddingBalance(false);
@@ -86,6 +155,7 @@ const NavBarInfo = ({ money }) => {
 
     const getBalanceAndUpdate = async () => {
         const balance = await GetBalance(user);
+        debugger
         setBalance(balance);
         localStorage.setItem('balance', balance?.toString());
     };
@@ -95,19 +165,18 @@ const NavBarInfo = ({ money }) => {
     }, [balance]);
 
     useEffect(() => {
-        debugger
         const handleAccountsChanged = (accounts) => {
-          if (accounts.length === 0) {
-            setUser(null); // Set user to null when disconnected
-            localStorage.removeItem('user_id');
-            window.location.href = "/";
-          }
+            if (accounts.length === 0) {
+                setUser(null); // Set user to null when disconnected
+                localStorage.removeItem('user_id');
+                window.location.href = "/";
+            }
         };
         window.ethereum.on("accountsChanged", handleAccountsChanged);
         return () => {
-          window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
+            window.ethereum.removeListener("accountsChanged", handleAccountsChanged);
         };
-      }, []);
+    }, []);
 
     const [newBalanceInput, setNewBalanceInput] = useState("");
 
@@ -116,6 +185,7 @@ const NavBarInfo = ({ money }) => {
             <nav className="navbar-info">
                 <h1 className="navbar-info-logo">
                     <span className="navbar-logo-text">Balance: {balance} ETH</span>
+                    <span className="navbar-logo-text">For withdraw: {voucher} ETH</span>
                     <Button
                         variant="contained"
                         onClick={handleAnchorClick}
@@ -142,77 +212,69 @@ const NavBarInfo = ({ money }) => {
                             handleAnchorClose();
                             handleOpen();
                         }}>
+                            <Tooltip title="Add money to the account" arrow>
+                                <FontAwesomeIcon
+                                    icon={faPlus}
+                                    style={{ marginRight: "8px", cursor: "pointer" }}
+                                />
+                            </Tooltip>
                             Add Balance
                         </MenuItem>
                         <MenuItem onClick={() => {
                             handleAnchorClose();
-                            handleWithdrawBalance();
+                            handleOpenGenerateWithdraw();
                         }}>
+                            <Tooltip title="Necessary to make the money available for withdrawal, do this action before the withdraw button below, if needed" arrow>
+                                <FontAwesomeIcon
+                                    icon={faCircleInfo}
+                                    style={{ marginRight: "8px", cursor: "pointer" }}
+                                />
+                            </Tooltip>
+                            Generate Balance to Withdraw
+                        </MenuItem>
+                        <MenuItem onClick={() => {
+                            handleAnchorClose();
+                            handleOpenWithdraw();
+                        }}>
+                            <Tooltip title="Withdraw money" arrow>
+                                <FontAwesomeIcon
+                                    icon={faMoneyBillTransfer}
+                                    style={{ marginRight: "8px", cursor: "pointer" }}
+                                />
+                            </Tooltip>
                             Withdraw
                         </MenuItem>
                     </Menu>
                 </h1>
             </nav>
-            <Dialog open={open}
-                onClose={handleClose}
-                disableBackdropClick={isAddingBalance}
-                disableEscapeKeyDown={isAddingBalance}
-            >
-                <DialogTitle>Add Balance</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Enter the amount in Ethereum to add to your balance:
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="balance"
-                        label="Amount"
-                        type="number"
-                        value={newBalanceInput}
-                        onChange={(e) => setNewBalanceInput(e.target.value)}
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} style={{ color: "#840000" }}>
-                        Cancel
-                    </Button>
-                    <Button onClick={handleAddBalance} style={{ color: "#59a14e" }}>
-                        Add
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog
-                open={confirmOpen}
-                onClose={handleConfirmClose}
-                disableBackdropClick={isAddingBalance} // Disable backdrop click while confirming
-                disableEscapeKeyDown={isAddingBalance} // Disable escape key while confirming
-
-            >
-                <DialogTitle>Confirm</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to add {newBalanceInput} to your balance?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleConfirmClose} style={{ color: "#840000" }}>
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleAddConfirmed}
-                        style={{ color: "#59a14e" }}
-                        disabled={isAddingBalance}
-                    >
-                        {isAddingBalance ? (
-                            <CircularProgress size={20} color="inherit" />
-                        ) : (
-                            "Confirm"
-                        )}
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <AddBalanceDialog
+                open={open}
+                handleClose={handleClose}
+                handleAddBalance={handleAddBalance}
+                handleConfirmClose={handleConfirmClose}
+                handleAddConfirmed={handleAddConfirmed}
+                newBalanceInput={newBalanceInput}
+                isAddingBalance={isAddingBalance}
+                onNewBalanceInputChange={setNewBalanceInput}
+            />
+            <GenerateWithdrawDialog
+                open={openGenerateWithDraw}
+                handleClose={handleCloseGenerateWithdraw}
+                handleWithdrawBalance={handleGenerateWithdrawBalance}
+                handleConfirmClose={handleConfirmCloseGenerateWithdraw}
+                newBalanceInput={newBalanceInput}
+                isAddingBalance={isAddingBalance}
+                onNewBalanceInputChange={setNewBalanceInput}
+            />
+            <WithdrawDialog
+                open={openWithDraw}
+                handleClose={handleCloseWithdraw}
+                handleWithdrawBalance={handleWithdrawBalance}
+                handleConfirmClose={handleConfirmCloseWithdraw}
+                newBalanceInput={newBalanceInput}
+                isAddingBalance={isAddingBalance}
+                onNewBalanceInputChange={setNewBalanceInput}
+            />
         </div>
     );
 

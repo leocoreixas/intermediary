@@ -1,8 +1,8 @@
-import Navbar from "@/app/components/Navbar/Navbar";
+import Navbar from "../../components/Navbar/Navbar";
 import './About.css'
 import homeImg from '../../assets/about-us-banner.png'
-import Hero from '@/app/components/Hero/Hero';
-import AboutUs from "@/app/components/AboutUs/AboutUs";
+import Hero from '../../components/Hero/Hero';
+import AboutUs from "../../components/AboutUs/AboutUs";
 import Footer from '../../components/Footer/Footer';
 
 function About() {

@@ -1,9 +1,9 @@
 import './NewOffer.css';
 import Footer from '../../components/Footer/Footer';
-import SideBar from '@/app/components/SideBar/SideBar';
+import SideBar from '../../components/SideBar/SideBar';
 import { useState } from 'react';
-import CreateForm from '@/app/components/Cartesi/CreateForm/CreateForm';
-import NavBarInfo from '@/app/components/NavBarInfo/NavBarInfo';
+import CreateForm from '../../components/Cartesi/CreateForm/CreateForm';
+import NavBarInfo from '../../components/NavBarInfo/NavBarInfo';
 
 function NewOffer() {
     return (
