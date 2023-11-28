@@ -7,10 +7,10 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './ListInspectReOffers.css'
 import Grid from '@mui/material/Grid';
-import CategoryList from "../CreateForm/ServiceType";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-
-const INSPECT_URL = "http://localhost:5005/inspect";
+const INSPECT_URL = process.env.INSPECT_URL;
 
 function ListInspectReOffers() {
     const [loading, setLoading] = useState(false);

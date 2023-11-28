@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import FunctionsInspectEnum from "../../../utils/enums/FunctionsInspectEnum";
 import axios from "axios";
 import web3 from "web3";
-const INSPECT_URL = "http://localhost:5005/inspect";
+import * as dotenv from "dotenv";
+dotenv.config();
+const INSPECT_URL = process.env.INSPECT_URL;
 
 
 async function GetBalance(user_id) {

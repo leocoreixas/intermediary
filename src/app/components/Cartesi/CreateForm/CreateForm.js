@@ -11,9 +11,11 @@ import CategoryList from './ServiceType'
 import InputMask from 'react-input-mask';
 import { IInputBox__factory } from "@cartesi/rollups/";
 import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const LOCALHOST_DAPP_ADDRESS = "0x142105FC8dA71191b3a13C738Ba0cF4BC33325e2";
-const LOCALHOST_INPUTBOX_ADDRESS = "0x5a723220579C0DCb8C9253E6b4c62e572E379945";
+const LOCALHOST_DAPP_ADDRESS = process.env.LOCALHOST_DAPP_ADDRESS;
+const LOCALHOST_INPUTBOX_ADDRESS = process.env.LOCALHOST_INPUTBOX_ADDRESS;
 
 function CreateForm() {
     const [accountIndex] = useState(0);

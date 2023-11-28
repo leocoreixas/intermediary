@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import DataTable from "react-data-table-component"
 import axios, * as others from 'axios';
 import web3 from 'web3';
 import ActionsCell from './ActionsCell';
@@ -10,10 +9,9 @@ import CardContent from '@mui/material/CardContent';
 import { Button } from '@mui/material'
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-import CategoriesEnum from '../../../utils/enums/EnumCategories';
-
-const INSPECT_URL = "http://localhost:5005/inspect";
-//const LOCALHOST_DAPP_ADDRESS = "0xF8C694fd58360De278d5fF2276B7130Bfdc0192A";
+import * as dotenv from "dotenv";
+dotenv.config();
+const INSPECT_URL = process.env.INSPECT_URL;
 
 
 function ListAllInspectOffers() {

@@ -41,7 +41,6 @@ const BarChartComponent = ({ filterValue, dataNotice, dataInspect, startDate, en
   const [chartData, setChartData] = useState([]);
   const [startDateFilter, setStartDate] = useState(null);
   const [endDateFilter, setEndDate] = useState(null);
-  debugger
   useEffect(() => {
     setStartDate(startDate);
     setEndDate(endDate);

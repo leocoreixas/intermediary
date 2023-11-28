@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import './ReOfferForm.css'
 import Web3 from "web3";
 import { IInputBox__factory } from "@cartesi/rollups/";
-
-const LOCALHOST_DAPP_ADDRESS = "0x142105FC8dA71191b3a13C738Ba0cF4BC33325e2";
-const LOCALHOST_INPUTBOX_ADDRESS = "0x5a723220579C0DCb8C9253E6b4c62e572E379945";
+import * as dotenv from "dotenv";
+dotenv.config();
+const LOCALHOST_DAPP_ADDRESS = process.env.LOCALHOST_DAPP_ADDRESS;
+const LOCALHOST_INPUTBOX_ADDRESS = process.env.LOCALHOST_INPUTBOX_ADDRESS;
 
 async function ReofferForm(rows, accountIndex, new_value) {
 

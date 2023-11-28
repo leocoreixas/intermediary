@@ -12,9 +12,11 @@ import { Button } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import axios, * as others from 'axios';
 import web3 from 'web3';
+import * as dotenv from "dotenv";
+dotenv.config();
 
-
-const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
+const URL_QUERY_GRAPHQL = process.env.URL_QUERY_GRAPHQL;
+const INSPECT_URL = process.env.INSPECT_URL;
 
 const client = new ApolloClient({
   uri: URL_QUERY_GRAPHQL,
@@ -44,7 +46,6 @@ const GET_NOTICES = gql`
     }
 `;
 
-const INSPECT_URL = "http://localhost:5005/inspect";
 
 
 function ListHome() {

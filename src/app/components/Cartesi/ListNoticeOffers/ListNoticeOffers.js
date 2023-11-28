@@ -10,8 +10,9 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
-const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
+import * as dotenv from "dotenv";
+dotenv.config();
+const URL_QUERY_GRAPHQL = process.env.URL_QUERY_GRAPHQL;
 
 const client = new ApolloClient({
   uri: URL_QUERY_GRAPHQL,
