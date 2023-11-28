@@ -9,9 +9,9 @@ import CardContent from '@mui/material/CardContent';
 import { Button } from '@mui/material'
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
-const INSPECT_URL = process.env.INSPECT_URL;
+const NEXT_PUBLIC_INSPECT_URL = process.env.NEXT_PUBLIC_INSPECT_URL;
 
 
 function ListAllInspectOffers() {
@@ -77,7 +77,7 @@ function ListAllInspectOffers() {
                 user_id: localStorareUser
             }
             const stringToEncode = JSON.stringify(payload);
-            const url = `${INSPECT_URL}/${stringToEncode}`;
+            const url = `${NEXT_PUBLIC_INSPECT_URL}/${stringToEncode}`;
 
             let config = {
                 url: url,

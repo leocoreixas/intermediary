@@ -6,16 +6,13 @@ import ActionsCell from '../ListAllInspectOffers/ActionsCell';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import { Button } from '@mui/material';
-import PropTypes from 'prop-types';
-import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import * as dotenv from "dotenv";
+import { generateGetNoticesQuery } from '../graphql/query_notice'
+import dotenv from "dotenv";
 dotenv.config();
-const URL_QUERY_GRAPHQL = process.env.URL_QUERY_GRAPHQL;
+const NEXT_PUBLIC_URL_QUERY_GRAPHQL = process.env.NEXT_PUBLIC_URL_QUERY_GRAPHQL;
 
 const client = new ApolloClient({
-  uri: URL_QUERY_GRAPHQL,
+  uri: NEXT_PUBLIC_URL_QUERY_GRAPHQL,
   cache: new InMemoryCache(),
 });
 
@@ -83,26 +80,6 @@ const Columns = [
 ];
 
 // GraphQL query to retrieve notices given a cursor
-const GET_NOTICES = gql`
-    query GetNotices($cursor: String) {
-        notices(first: 10, after: $cursor) {
-            totalCount
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-            edges {
-                node {
-                    index
-                    input {
-                        index
-                    }
-                    payload
-                }
-            }
-        }
-    }
-`;
 
 function OffersList() {
   const [loading, setLoading] = useState(false);
@@ -111,6 +88,8 @@ function OffersList() {
   const [selectedFilter, setSelectedFilter] = useState("");
   const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
   const [cursor, setCursor] = useState(null);
+  const [totalCount, setTotalCount] = useState(10);
+  const GET_NOTICES = generateGetNoticesQuery(totalCount);
 
   const handleFilter = (e) => {
     const keyword = e.target.value.toLowerCase();
@@ -197,7 +176,7 @@ function OffersList() {
         columns={Columns}
         data={dataNotice}
         progressPending={loading}
-        paginationRowsPerPageOptions={[5, 10]}
+        paginationRowsPerPageOptions={[totalCount]}
         customStyles={customStyles}
         pagination
       />

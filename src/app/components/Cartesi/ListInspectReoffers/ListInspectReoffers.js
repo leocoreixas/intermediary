@@ -7,10 +7,10 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import './ListInspectReOffers.css'
 import Grid from '@mui/material/Grid';
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
 
-const INSPECT_URL = process.env.INSPECT_URL;
+const NEXT_PUBLIC_INSPECT_URL = process.env.NEXT_PUBLIC_INSPECT_URL;
 
 function ListInspectReOffers() {
     const [loading, setLoading] = useState(false);
@@ -79,7 +79,7 @@ function ListInspectReOffers() {
                 user_id: localStorareUser
             }
             const stringToEncode = JSON.stringify(payload);
-            const url = `${INSPECT_URL}/${stringToEncode}`;
+            const url = `${NEXT_PUBLIC_INSPECT_URL}/${stringToEncode}`;
 
             let config = {
                 url: url,

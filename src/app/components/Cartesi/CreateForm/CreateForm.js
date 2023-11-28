@@ -11,11 +11,11 @@ import CategoryList from './ServiceType'
 import InputMask from 'react-input-mask';
 import { IInputBox__factory } from "@cartesi/rollups/";
 import { Radio, RadioGroup, FormControlLabel } from '@mui/material';
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
 
-const LOCALHOST_DAPP_ADDRESS = process.env.LOCALHOST_DAPP_ADDRESS;
-const LOCALHOST_INPUTBOX_ADDRESS = process.env.LOCALHOST_INPUTBOX_ADDRESS;
+const NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS = process.env.NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS;
+const NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS = process.env.NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS;
 
 function CreateForm() {
     const [accountIndex] = useState(0);
@@ -132,7 +132,7 @@ function CreateForm() {
             try {
                 setLoading(true);
                 let web3 = new Web3(window.ethereum);
-                const inputContract = new web3.eth.Contract(IInputBox__factory.abi, LOCALHOST_INPUTBOX_ADDRESS);
+                const inputContract = new web3.eth.Contract(IInputBox__factory.abi, NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS);
                 const input = {
                     function_id: 1,
                     needToNotice: false,
@@ -161,7 +161,7 @@ function CreateForm() {
                 const inputString = JSON.stringify(input);
                 const inputHex = web3.utils.utf8ToHex(inputString);
                 try {
-                    const txReceipt = await inputContract.methods.addInput(LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
+                    const txReceipt = await inputContract.methods.addInput(NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
                     setLoading(false);
                 } catch (error) {
                     setLoading(false);

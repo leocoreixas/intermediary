@@ -2,17 +2,17 @@ import React, { useEffect } from "react";
 import './ReOfferForm.css'
 import Web3 from "web3";
 import { IInputBox__factory } from "@cartesi/rollups/";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config();
-const LOCALHOST_DAPP_ADDRESS = process.env.LOCALHOST_DAPP_ADDRESS;
-const LOCALHOST_INPUTBOX_ADDRESS = process.env.LOCALHOST_INPUTBOX_ADDRESS;
+const NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS = process.env.NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS;
+const NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS = process.env.NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS;
 
 async function ReofferForm(rows, accountIndex, new_value) {
 
     try {
         const localStorareUser = localStorage.getItem('user_id');
         let web3 = new Web3(window.ethereum);
-        const inputContract = new web3.eth.Contract(IInputBox__factory.abi, LOCALHOST_INPUTBOX_ADDRESS);
+        const inputContract = new web3.eth.Contract(IInputBox__factory.abi, NEXT_PUBLIC_LOCALHOST_INPUTBOX_ADDRESS);
         const input = {
             function_id: 3,
             needToNotice: false,
@@ -41,7 +41,7 @@ async function ReofferForm(rows, accountIndex, new_value) {
         const inputString = JSON.stringify(input);
         const inputHex = web3.utils.utf8ToHex(inputString);
         try {
-            const txReceipt = await inputContract.methods.addInput(LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
+            const txReceipt = await inputContract.methods.addInput(NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
         } catch (error) {
             console.log(error);
         }

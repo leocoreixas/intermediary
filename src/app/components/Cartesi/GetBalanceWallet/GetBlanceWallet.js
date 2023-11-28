@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import FunctionsInspectEnum from "../../../utils/enums/FunctionsInspectEnum";
 import axios from "axios";
 import web3 from "web3";
-import * as dotenv from "dotenv";
-dotenv.config();
-const INSPECT_URL = process.env.INSPECT_URL;
+const NEXT_PUBLIC_INSPECT_URL = process.env.NEXT_PUBLIC_INSPECT_URL;
 
 
 async function GetBalance(user_id) {
@@ -14,7 +12,7 @@ async function GetBalance(user_id) {
         user_id: localStorareUser
     }
     const stringToEncode = JSON.stringify(payload);
-    const url = `${INSPECT_URL}/${stringToEncode}`;
+    const url = `${NEXT_PUBLIC_INSPECT_URL}/${stringToEncode}`;
 
     let config = {
         url: url,

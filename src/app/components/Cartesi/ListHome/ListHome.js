@@ -12,39 +12,23 @@ import { Button } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import axios, * as others from 'axios';
 import web3 from 'web3';
-import * as dotenv from "dotenv";
+import { generateGetNoticesQuery } from '../graphql/query_notice'
+import dotenv from "dotenv";
 dotenv.config();
 
-const URL_QUERY_GRAPHQL = process.env.URL_QUERY_GRAPHQL;
-const INSPECT_URL = process.env.INSPECT_URL;
+const NEXT_PUBLIC_URL_QUERY_GRAPHQL = process.env.NEXT_PUBLIC_URL_QUERY_GRAPHQL;
+const NEXT_PUBLIC_INSPECT_URL = process.env.NEXT_PUBLIC_INSPECT_URL;
 
 const client = new ApolloClient({
-  uri: URL_QUERY_GRAPHQL,
+  uri: NEXT_PUBLIC_URL_QUERY_GRAPHQL,
   cache: new InMemoryCache(),
 });
 
 
 // GraphQL query to retrieve notices given a cursor
-const GET_NOTICES = gql`
-    query GetNotices($cursor: String) {
-        notices(first: 10, after: $cursor) {
-            totalCount
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-            edges {
-                node {
-                    index
-                    input {
-                        index
-                    }
-                    payload
-                }
-            }
-        }
-    }
-`;
+const GET_NOTICES = generateGetNoticesQuery(100);
+
+
 
 
 
@@ -55,10 +39,6 @@ function ListHome() {
   const localStorareUser = localStorage.getItem('user_id');
   const [dataNotice, setDataNotice] = useState([]);
   const [dataInspect, setDataInspect] = useState([]);
-  const { loading: queryLoading, error: queryError, data } = useQuery(GET_NOTICES, {
-    variables: { cursor: null },
-    pollInterval: 500,
-  });
   const [cursor, setCursor] = useState(null);
   const [filterValue, setFilterValue] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -82,7 +62,7 @@ function ListHome() {
         user_id: localStorareUser
       }
       const stringToEncode = JSON.stringify(payload);
-      const url = `${INSPECT_URL}/${stringToEncode}`;
+      const url = `${NEXT_PUBLIC_INSPECT_URL}/${stringToEncode}`;
 
       let config = {
         url: url,
@@ -103,7 +83,7 @@ function ListHome() {
             .replace(/None/g, 'null')
             .replace(/False/g, 'false')
             .replace(/True/g, 'true')
-            .replace(/'/g, '"'))) : [];       
+            .replace(/'/g, '"'))) : [];
         setDataInspect(arrayOfObjects);
       } catch (error) {
         console.log(error);
@@ -122,7 +102,7 @@ function ListHome() {
   function replaceSpecialCharacters(data) {
     const sanitizedData = JSON.parse(JSON.stringify(data).replace(/\\/g, ''));
     return sanitizedData;
-}
+  }
 
   const result = useQuery(GET_NOTICES, {
     variables: { cursor: cursor },
