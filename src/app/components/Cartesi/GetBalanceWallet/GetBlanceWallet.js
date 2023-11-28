@@ -39,7 +39,6 @@ async function GetBalance(user_id) {
 
             return JSON.parse(stringModified);
         }) : [];
-        debugger
         const voucher = arrayOfObjects.length > 1 ? arrayOfObjects[1].amount : '0';
         localStorage.setItem('voucher', voucher);
         return arrayOfObjects.length > 0 ? arrayOfObjects[0].amount : '0';

@@ -89,7 +89,6 @@ const NavBarInfo = ({ money }) => {
 
     const handleAddBalance = async () => {
         const newBalance = parseFloat(newBalanceInput);
-        debugger
         if (!isNaN(newBalance)) {
             handleConfirmOpen();
         } else {
@@ -119,7 +118,6 @@ const NavBarInfo = ({ money }) => {
                 setIsAddingBalance(false);
                 return;
             }
-            debugger
             await GenerateWithdrawBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
             handleCloseGenerateWithdraw();
@@ -139,7 +137,6 @@ const NavBarInfo = ({ money }) => {
                 setIsAddingBalance(false);
                 return;
             }
-            debugger
             await WithdrawBalanceWallet(newBalanceInput);
             setIsAddingBalance(false);
             handleCloseWithdraw();
@@ -155,7 +152,6 @@ const NavBarInfo = ({ money }) => {
 
     const getBalanceAndUpdate = async () => {
         const balance = await GetBalance(user);
-        debugger
         setBalance(balance);
         localStorage.setItem('balance', balance?.toString());
     };

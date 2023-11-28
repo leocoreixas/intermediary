@@ -40,12 +40,5 @@ export const MenuItems = [
         icon: faDatabase,
         iconStyle: "icon-style",
         path: "/historical"
-    },
-    {
-        key: 5,
-        text: "Tutorial",
-        icon: faBook,
-        iconStyle: "icon-style",
-        path: "/tutorial"
     }
 ];

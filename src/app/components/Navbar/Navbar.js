@@ -19,7 +19,6 @@ const Navbar = () => {
   };
 
   const verifyConnection = () => {
-    debugger
     if (typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       window.ethereum.request({ method: 'eth_accounts' })
         .then((accounts) => {

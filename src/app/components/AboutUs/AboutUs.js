@@ -9,16 +9,12 @@ const AboutUs = () => {
       <h2 className="meet-the-team">Meet the Team</h2>
       <div className="team-members">
         <div className="team-member">
-          <h3>John Doe</h3>
+          <h3>Leonardo Coreixas Biasotto Mirapalhete</h3>
           <p>Lead Developer</p>
         </div>
         <div className="team-member">
-          <h3>Jane Doe</h3>
+          <h3>Leonardo Coreixas Biasotto Mirapalhete</h3>
           <p>UI Designer</p>
-        </div>
-        <div className="team-member">
-          <h3>Bob Smith</h3>
-          <p>Marketing Manager</p>
         </div>
       </div>
     </div>

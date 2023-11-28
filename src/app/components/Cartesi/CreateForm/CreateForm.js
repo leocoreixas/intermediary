@@ -109,6 +109,19 @@ function CreateForm() {
         setNumber(null);
         setSelectedType(null);
     }
+    function extractAndFormatFloatValue(input) {
+        const regex = /(\d+(\.\d+)?)/;
+        const match = input.match(regex);
+      
+        if (match && match[1]) {
+          const floatValue = parseFloat(match[1]);
+          if (!isNaN(floatValue)) {
+            return floatValue; // Format to two decimal places
+          }
+        }
+      
+        return null;
+      }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -127,7 +140,7 @@ function CreateForm() {
                     original_offer_id: null,
                     user_id: localStorareUser,
                     proposer_id: null,
-                    offer_value: value,
+                    offer_value: extractAndFormatFloatValue(value),
                     status: 'pending',
                     ended: false,
                     created_at: new Date(),
@@ -143,7 +156,6 @@ function CreateForm() {
                     selectedType,
                     productType
                 }
-
                 const inputString = JSON.stringify(input);
                 const inputHex = web3.utils.utf8ToHex(inputString);
                 try {

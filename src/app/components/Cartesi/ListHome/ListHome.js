@@ -24,26 +24,24 @@ const client = new ApolloClient({
 
 // GraphQL query to retrieve notices given a cursor
 const GET_NOTICES = gql`
-  query GetNotices($cursor: String) {
-    notices(first: 10, after: $cursor) {
-      totalCount
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      nodes {
-        id
-        payload
-        index
-        input {
-          index
-          epoch {
-            index
-          }
+    query GetNotices($cursor: String) {
+        notices(first: 10, after: $cursor) {
+            totalCount
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+            edges {
+                node {
+                    index
+                    input {
+                        index
+                    }
+                    payload
+                }
+            }
         }
-      }
     }
-  }
 `;
 
 const INSPECT_URL = "http://localhost:5005/inspect";
@@ -60,6 +58,7 @@ function ListHome() {
     variables: { cursor: null },
     pollInterval: 500,
   });
+  const [cursor, setCursor] = useState(null);
   const [filterValue, setFilterValue] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -117,7 +116,6 @@ function ListHome() {
 
   useEffect(() => {
     handleLoad()
-    refetchData()
   }, [])
 
   function replaceSpecialCharacters(data) {
@@ -125,31 +123,24 @@ function ListHome() {
     return sanitizedData;
 }
 
-
-  const refetchData = () => {
-    setLoading(true);
-    setError(null);
-    client
-      .query({
-        query: GET_NOTICES,
-        variables: { cursor: null },
-      })
-      .then((result) => {
-        const { data } = result;
-        if (data?.notices?.nodes) {
-          const newNoticeData = data.notices.nodes.map((node) => {
-            const echo = ethers.utils.toUtf8String(node.payload);
-            return JSON.parse(echo);
-          });
-          setDataNotice(newNoticeData);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
+  const result = useQuery(GET_NOTICES, {
+    variables: { cursor: cursor },
+    pollInterval: 500,
+  });
+  useEffect(() => {
+    if (result?.loading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+    if (result?.data?.notices?.edges) {
+      const newNoticeData = result?.data.notices.edges.map(({ node }) => {
+        const echo = ethers.utils.toUtf8String(node.payload);
+        return JSON.parse(echo);
       });
-  };
+      setDataNotice(newNoticeData);
+    }
+  }, [result?.data?.notices?.edges, result?.loading]);
 
   const handleFilterClick = () => {
     if (dataNotice.length == 0 && dataInspect.length == 0) {

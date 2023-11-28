@@ -22,7 +22,6 @@ async function GenerateWithDrawWallet(balance) {
         const inputString = JSON.stringify(input);
         const inputHex = web3.utils.utf8ToHex(inputString);
         try {
-            debugger
             await inputContract.methods.addInput(LOCALHOST_DAPP_ADDRESS, inputHex).send({ from: localStorareUser });
         } catch (error) {
             console.log(error);

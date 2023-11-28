@@ -16,6 +16,8 @@ const generateDateRange = (startDate, endDate, needToLimit = true, numDays = 7) 
   today.setHours(0, 0, 0, 0);
 
   let currentDate = startDate ? new Date(startDate) : new Date(today);
+  currentDate.setDate(currentDate.getDate() + 1);
+  currentDate.setHours(23,59, 59, 59);
   if (!startDate) {
     currentDate.setDate(today.getDate() - numDays +1); 
   }
@@ -39,7 +41,7 @@ const BarChartComponent = ({ filterValue, dataNotice, dataInspect, startDate, en
   const [chartData, setChartData] = useState([]);
   const [startDateFilter, setStartDate] = useState(null);
   const [endDateFilter, setEndDate] = useState(null);
-
+  debugger
   useEffect(() => {
     setStartDate(startDate);
     setEndDate(endDate);

@@ -1,17 +1,15 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, gql } from "@apollo/client";
-import { useToast } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import DataTable from "react-data-table-component"
 import ActionsCell from '../ListAllInspectOffers/ActionsCell';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
+import { Button } from '@mui/material';
+import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { Button, CardActionArea, CardActions } from '@mui/material';
-//import genericImage from '../../assets/generic-image.png';
+import Box from '@mui/material/Box';
 
 const URL_QUERY_GRAPHQL = "http://localhost:4000/graphql";
 
@@ -85,45 +83,37 @@ const Columns = [
 
 // GraphQL query to retrieve notices given a cursor
 const GET_NOTICES = gql`
-  query GetNotices($cursor: String) {
-    notices(first: 10, after: $cursor) {
-      totalCount
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-      nodes {
-        id
-        payload
-        index
-        input {
-          index
-          epoch {
-            index
-          }
+    query GetNotices($cursor: String) {
+        notices(first: 10, after: $cursor) {
+            totalCount
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+            edges {
+                node {
+                    index
+                    input {
+                        index
+                    }
+                    payload
+                }
+            }
         }
-      }
     }
-  }
 `;
 
 function OffersList() {
-  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [dataNotice, setDataNotice] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
   const typeOptions = ['All types', 'Homemade', 'New', 'Used'];
+  const [cursor, setCursor] = useState(null);
 
-
-  // Retrieve notices
-  const { loading: queryLoading, error: queryError, data } = useQuery(GET_NOTICES, {
-    variables: { cursor: null },
-  });
   const handleFilter = (e) => {
     const keyword = e.target.value.toLowerCase();
     if (keyword === "") {
-      refetchData();
     } else {
       const newData = [...dataNotice];
       const filteredData = newData.filter(
@@ -138,43 +128,30 @@ function OffersList() {
       setDataNotice(filteredData);
     }
   };
-
-  const refetchData = () => {
-    setLoading(true);
-    setError(null);
-    setDataNotice([]);
-    setSelectedFilter("");
-    client
-      .query({
-        query: GET_NOTICES,
-        variables: { cursor: null },
-      })
-      .then((result) => {
-        const { data } = result;
-        if (data?.notices?.nodes) {
-          const newNoticeData = data.notices.nodes.map((node) => {
-            const echo = ethers.utils.toUtf8String(node.payload);
-            return JSON.parse(echo);
-          });
-          setDataNotice(newNoticeData);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
-  };
-
+  const result = useQuery(GET_NOTICES, {
+    variables: { cursor: cursor },
+    pollInterval: 500,
+  });
   useEffect(() => {
-    refetchData();
-  }, []);
+    if (result?.loading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+
+    if (result?.data?.notices?.edges) {
+      const newNoticeData = result?.data.notices.edges.map(({ node }) => {
+        const echo = ethers.utils.toUtf8String(node.payload);
+        return JSON.parse(echo);
+      });
+      setDataNotice(newNoticeData);
+    }
+  }, [result?.data?.notices?.edges, result?.loading]);
 
   const handleFilterChange = (e) => {
     const selectedType = e.target.value;
     if (selectedType === "All types") {
       setSelectedFilter(selectedType);
-      refetchData();
     } else {
       setSelectedFilter(selectedType);
       filterDataByType(selectedType);
