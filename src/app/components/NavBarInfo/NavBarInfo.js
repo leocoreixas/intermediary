@@ -19,6 +19,15 @@ import WithdrawDialog from "./WithDrawBalance";
 import { faCircleInfo, faPlus, faMoneyBillTransfer, } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Menu, MenuItem, Tooltip } from "@mui/material";
+import { Client, Provider, cacheExchange, fetchExchange } from 'urql';
+
+
+const client = new Client({
+    url: process.env.NEXT_PUBLIC_URL_QUERY_GRAPHQL,
+    exchanges: [cacheExchange, fetchExchange],
+});
+
+
 const NavBarInfo = ({ money }) => {
     const [balance, setBalance] = useState(() => localStorage.getItem('balance') || 0);
     const [voucher, setVoucher] = useState(() => localStorage.getItem('voucher') || 0);
@@ -31,6 +40,7 @@ const NavBarInfo = ({ money }) => {
     const [confirmOpenGenerateWithDraw, setConfirmOpenGenerateWithDraw] = useState(false);
     const [openWithDraw, setOpenWithDraw] = useState(false);
     const [confirmOpenWithDraw, setConfirmOpenWithDraw] = useState(false);
+    const [openVoucherList, setOpenVoucherList] = useState(false);
     const handleOpen = () => {
         setOpen(true);
     };
@@ -132,12 +142,13 @@ const NavBarInfo = ({ money }) => {
     const handleWithdrawBalance = async () => {
         try {
             setIsAddingBalance(true);
-            if (balance == 0) {
-                alert("You don't have balance to withdraw.");
-                setIsAddingBalance(false);
-                return;
-            }
-            await WithdrawBalanceWallet(newBalanceInput);
+            // if (balance == 0) {
+            //     alert("You don't have balance to withdraw.");
+            //     setIsAddingBalance(false);
+            //     return;
+            // }
+            //await WithdrawBalanceWallet(newBalanceInput);
+            setOpenVoucherList(true);
             setIsAddingBalance(false);
             handleCloseWithdraw();
             handleConfirmOpenWithdraw();
@@ -177,101 +188,104 @@ const NavBarInfo = ({ money }) => {
     const [newBalanceInput, setNewBalanceInput] = useState("");
 
     return (
-        <div className="navbar-info-container">
-            <nav className="navbar-info">
-                <h1 className="navbar-info-logo">
-                    <span className="navbar-logo-text">Balance: {balance} ETH</span>
-                    <span className="navbar-logo-text">For withdraw: {voucher} ETH</span>
-                    <Button
-                        variant="contained"
-                        onClick={handleAnchorClick}
-                        disabled={isAddingBalance}
-                        sx={{
-                            backgroundColor: "#fdad00",
-                            "&:hover": {
-                                backgroundColor: "#ffecb3",
-                            },
-                        }}
-                    >
-                        {isAddingBalance ? (
-                            <CircularProgress size={20} color="inherit" />
-                        ) : (
-                            "Actions"
-                        )}
-                    </Button>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleAnchorClose}
-                    >
-                        <MenuItem onClick={() => {
-                            handleAnchorClose();
-                            handleOpen();
-                        }}>
-                            <Tooltip title="Add money to the account" arrow>
-                                <FontAwesomeIcon
-                                    icon={faPlus}
-                                    style={{ marginRight: "8px", cursor: "pointer" }}
-                                />
-                            </Tooltip>
-                            Add Balance
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleAnchorClose();
-                            handleOpenGenerateWithdraw();
-                        }}>
-                            <Tooltip title="Necessary to make the money available for withdrawal, do this action before the withdraw button below, if needed" arrow>
-                                <FontAwesomeIcon
-                                    icon={faCircleInfo}
-                                    style={{ marginRight: "8px", cursor: "pointer" }}
-                                />
-                            </Tooltip>
-                            Generate Balance to Withdraw
-                        </MenuItem>
-                        <MenuItem onClick={() => {
-                            handleAnchorClose();
-                            handleOpenWithdraw();
-                        }}>
-                            <Tooltip title="Withdraw money" arrow>
-                                <FontAwesomeIcon
-                                    icon={faMoneyBillTransfer}
-                                    style={{ marginRight: "8px", cursor: "pointer" }}
-                                />
-                            </Tooltip>
-                            Withdraw
-                        </MenuItem>
-                    </Menu>
-                </h1>
-            </nav>
-            <AddBalanceDialog
-                open={open}
-                handleClose={handleClose}
-                handleAddBalance={handleAddBalance}
-                handleConfirmClose={handleConfirmClose}
-                handleAddConfirmed={handleAddConfirmed}
-                newBalanceInput={newBalanceInput}
-                isAddingBalance={isAddingBalance}
-                onNewBalanceInputChange={setNewBalanceInput}
-            />
-            <GenerateWithdrawDialog
-                open={openGenerateWithDraw}
-                handleClose={handleCloseGenerateWithdraw}
-                handleWithdrawBalance={handleGenerateWithdrawBalance}
-                handleConfirmClose={handleConfirmCloseGenerateWithdraw}
-                newBalanceInput={newBalanceInput}
-                isAddingBalance={isAddingBalance}
-                onNewBalanceInputChange={setNewBalanceInput}
-            />
-            <WithdrawDialog
-                open={openWithDraw}
-                handleClose={handleCloseWithdraw}
-                handleWithdrawBalance={handleWithdrawBalance}
-                handleConfirmClose={handleConfirmCloseWithdraw}
-                newBalanceInput={newBalanceInput}
-                isAddingBalance={isAddingBalance}
-                onNewBalanceInputChange={setNewBalanceInput}
-            />
-        </div>
+        <Provider value={client}>
+            <div className="navbar-info-container">
+                <nav className="navbar-info">
+                    <h1 className="navbar-info-logo">
+                        <span className="navbar-logo-text">Balance: {balance} ETH</span>
+                        <span className="navbar-logo-text">For withdraw: {voucher} ETH</span>
+                        <Button
+                            variant="contained"
+                            onClick={handleAnchorClick}
+                            disabled={isAddingBalance}
+                            sx={{
+                                backgroundColor: "#fdad00",
+                                "&:hover": {
+                                    backgroundColor: "#ffecb3",
+                                },
+                            }}
+                        >
+                            {isAddingBalance ? (
+                                <CircularProgress size={20} color="inherit" />
+                            ) : (
+                                "Actions"
+                            )}
+                        </Button>
+                        <Menu
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleAnchorClose}
+                        >
+                            <MenuItem onClick={() => {
+                                handleAnchorClose();
+                                handleOpen();
+                            }}>
+                                <Tooltip title="Add money to the account" arrow>
+                                    <FontAwesomeIcon
+                                        icon={faPlus}
+                                        style={{ marginRight: "8px", cursor: "pointer" }}
+                                    />
+                                </Tooltip>
+                                Add Balance
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                handleAnchorClose();
+                                handleOpenGenerateWithdraw();
+                            }}>
+                                <Tooltip title="Necessary to make the money available for withdrawal, do this action before the withdraw button below, if needed" arrow>
+                                    <FontAwesomeIcon
+                                        icon={faCircleInfo}
+                                        style={{ marginRight: "8px", cursor: "pointer" }}
+                                    />
+                                </Tooltip>
+                                Generate Balance to Withdraw
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                handleAnchorClose();
+                                handleOpenWithdraw();
+                            }}>
+                                <Tooltip title="Withdraw money" arrow>
+                                    <FontAwesomeIcon
+                                        icon={faMoneyBillTransfer}
+                                        style={{ marginRight: "8px", cursor: "pointer" }}
+                                    />
+                                </Tooltip>
+                                Withdraw
+                            </MenuItem>
+                        </Menu>
+                    </h1>
+                </nav>
+                <AddBalanceDialog
+                    open={open}
+                    handleClose={handleClose}
+                    handleAddBalance={handleAddBalance}
+                    handleConfirmClose={handleConfirmClose}
+                    handleAddConfirmed={handleAddConfirmed}
+                    newBalanceInput={newBalanceInput}
+                    isAddingBalance={isAddingBalance}
+                    onNewBalanceInputChange={setNewBalanceInput}
+                />
+                <GenerateWithdrawDialog
+                    open={openGenerateWithDraw}
+                    handleClose={handleCloseGenerateWithdraw}
+                    handleWithdrawBalance={handleGenerateWithdrawBalance}
+                    handleConfirmClose={handleConfirmCloseGenerateWithdraw}
+                    newBalanceInput={newBalanceInput}
+                    isAddingBalance={isAddingBalance}
+                    onNewBalanceInputChange={setNewBalanceInput}
+                />
+                <WithdrawDialog
+                    open={openWithDraw}
+                    handleClose={handleCloseWithdraw}
+                    handleWithdrawBalance={handleWithdrawBalance}
+                    handleConfirmClose={handleConfirmCloseWithdraw}
+                    newBalanceInput={newBalanceInput}
+                    isAddingBalance={isAddingBalance}
+                    onNewBalanceInputChange={setNewBalanceInput}
+                    openVoucherList={openVoucherList}
+                />
+            </div>
+        </Provider>
     );
 
 };

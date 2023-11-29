@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 import GetBalance from "../GetBalanceWallet/GetBlanceWallet";
-import getVoucher from "../graphql/vouchers";
+import {Vouchers} from "../graphql/vouchers";
 import connect from "../connections/connect";
 import { rollups } from "../connections/rollups";
+
 
 async function WithDrawWallet(balance, url, index, input, rpc, mnemonic, accountIndex, args) {
     try {
         const localStorareUser = localStorage.getItem('user_id');
         balance = balance ? balance?.toString() : '0';
-
-        const voucher = await getVoucher(url, index, input);
+        const dappAddress = process.env.NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS;
+        const voucher = Vouchers({dappAddress})
         if (!voucher.proof) {
             return;
         }

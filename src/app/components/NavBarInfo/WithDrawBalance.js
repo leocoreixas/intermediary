@@ -6,7 +6,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import CircularProgress from "@mui/material/CircularProgress";
+import { Vouchers } from "../Cartesi/graphql/vouchers";
 
 const WithdrawDialog = ({
   open,
@@ -16,7 +16,10 @@ const WithdrawDialog = ({
   newBalanceInput,
   isAddingBalance,
   onNewBalanceInputChange, 
+  openVoucherList
 }) => {
+  const dappAddress = process.env.NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS;
+
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     onNewBalanceInputChange(newValue); 
@@ -49,9 +52,9 @@ const WithdrawDialog = ({
         <Button onClick={handleClose} style={{ color: "#840000" }}>
           Cancel
         </Button>
-        <Button onClick={handleWithdrawBalance} style={{ color: "#59a14e" }}>
-          Withdraw
-        </Button>
+        {openVoucherList && (
+          <Vouchers dappAddress={dappAddress} />
+        )}
       </DialogActions>
     </Dialog>
   );
