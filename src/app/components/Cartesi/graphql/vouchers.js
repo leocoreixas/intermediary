@@ -14,12 +14,16 @@ import {
     TableBody,
     TableRow,
     TableCell,
+    Grid,
+    CircularProgress 
 } from '@mui/material';
+
 
 export const Vouchers = (propos) => {
     const [voucherToFetch, setVoucherToFetch] = useState([0, 0]);
     const [openModal, setOpenModal] = useState(false);
     const [result, reexecuteQuery] = useVouchersQuery();
+    const [loading, setLoading] = useState(false);
     const [voucherResult, reexecuteVoucherQuery] = useVoucherQuery({
         variables: { voucherIndex: voucherToFetch[0], inputIndex: voucherToFetch[1] }
     });
@@ -36,6 +40,16 @@ export const Vouchers = (propos) => {
     const handleOpenModal = () => {
         setOpenModal(true);
     };
+
+    const handleReload = () => {
+        setLoading(true);
+        debugger
+        setTimeout(() => {
+          reexecuteQuery({ requestPolicy: 'network-only' });
+          setLoading(false);
+        }, 2000); 
+    
+      };
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -72,7 +86,7 @@ export const Vouchers = (propos) => {
             setVoucher(voucherResult.data.voucher);
         }
     }, [voucherResult, rollups]);
-
+    debugger
     const vouchers = data?.vouchers?.edges.map((node) => {
         const n = node.node;
         let payload = n?.payload;
@@ -173,8 +187,19 @@ export const Vouchers = (propos) => {
                         <TableBody>
                             {vouchers.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={2}>No vouchers found</TableCell>
-                                </TableRow>
+                                <TableCell colSpan={2}>
+                                  <Grid container alignItems="center" justifyContent="center">
+                                    {loading ? <CircularProgress /> : 'No vouchers found'}
+                                  </Grid>
+                                </TableCell>
+                                <TableCell>
+                                  <Grid container alignItems="center" justifyContent="center">
+                                    <Button disabled={loading} onClick={() => handleReload()}>
+                                    {loading ? 'Loading...' : 'Reload'}
+                                    </Button>
+                                  </Grid>
+                                </TableCell>
+                              </TableRow>
                             )}
                             {vouchers.length > 0 && (
                                 vouchers.map((voucher) => (
@@ -182,7 +207,7 @@ export const Vouchers = (propos) => {
                                         <TableCell>{voucher.id}</TableCell>
                                         <TableCell>{voucher.index}</TableCell>
                                         <TableCell>
-                                            <Button style={{color : "#fdad00"} } disabled={vouchers.length === 0} onClick={() => executeVoucher(vouchers[0])}>Withdraw</Button>
+                                            <Button style={{ color: "#fdad00" }} disabled={vouchers.length === 0} onClick={() => executeVoucher(vouchers[0])}>Withdraw</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))

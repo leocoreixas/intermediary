@@ -28,33 +28,21 @@ const WithdrawDialog = ({
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
       disableBackdropClick={isAddingBalance}
+      onClose={handleClose}
       disableEscapeKeyDown={isAddingBalance}
     >
       <DialogTitle>Withdraw </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Enter the amount in Ethereum to withdraw:
+          Are you sure you want to withdraw?
         </DialogContentText>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="balance"
-          label="Amount"
-          type="number"
-          value={newBalanceInput}
-          onChange={handleInputChange} 
-          fullWidth
-        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} style={{ color: "#840000" }}>
           Cancel
         </Button>
-        {openVoucherList && (
           <Vouchers dappAddress={dappAddress} />
-        )}
       </DialogActions>
     </Dialog>
   );

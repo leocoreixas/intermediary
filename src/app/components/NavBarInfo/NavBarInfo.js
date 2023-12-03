@@ -122,8 +122,12 @@ const NavBarInfo = ({ money }) => {
 
     const handleGenerateWithdrawBalance = async () => {
         try {
+            if (isNaN(newBalanceInput)) {
+                alert("Please enter a valid number.");
+                return;
+            }
             setIsAddingBalance(true);
-            if (balance == 0) {
+            if (Number(balance) < Number(newBalanceInput)) {
                 alert("You don't have balance to generate voucher.");
                 setIsAddingBalance(false);
                 return;
@@ -142,11 +146,6 @@ const NavBarInfo = ({ money }) => {
     const handleWithdrawBalance = async () => {
         try {
             setIsAddingBalance(true);
-            // if (balance == 0) {
-            //     alert("You don't have balance to withdraw.");
-            //     setIsAddingBalance(false);
-            //     return;
-            // }
             //await WithdrawBalanceWallet(newBalanceInput);
             setOpenVoucherList(true);
             setIsAddingBalance(false);
