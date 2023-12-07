@@ -161,7 +161,7 @@ const NavBarInfo = ({ money }) => {
 
 
     const getBalanceAndUpdate = async () => {
-        const balance = await GetBalance(user);
+        const balance = await GetBalance(user) || 0;
         setBalance(balance);
         localStorage.setItem('balance', balance?.toString());
     };

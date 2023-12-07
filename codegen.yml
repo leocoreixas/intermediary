@@ -1,7 +1,7 @@
 schema: ./graphql/schema.graphql
 documents: ./graphql/queries.graphql
 generates:
-    ./src/app/components/cartesi/graphql/generated/index.ts:
+    ./src/graphql/generated/index.ts:
         plugins:
             - typescript
             - typescript-operations
