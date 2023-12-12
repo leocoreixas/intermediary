@@ -19,6 +19,7 @@ async function GenerateWithDrawWallet(balance) {
             function_id: FunctionsAdvanceEnum.GENERATE_WITHDRAWAL,
             balance: ethereumInWei,
             address: NEXT_PUBLIC_LOCALHOST_DAPP_ADDRESS,
+            user_address: localStorareUser,
             user_id: localStorareUser
         }
         const inputString = JSON.stringify(input);

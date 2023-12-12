@@ -15,8 +15,9 @@ import {
     TableRow,
     TableCell,
     Grid,
-    CircularProgress 
+    CircularProgress
 } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 
 export const Vouchers = (propos) => {
@@ -45,11 +46,11 @@ export const Vouchers = (propos) => {
         setLoading(true);
         debugger
         setTimeout(() => {
-          reexecuteQuery({ requestPolicy: 'network-only' });
-          setLoading(false);
-        }, 2000); 
-    
-      };
+            reexecuteQuery({ requestPolicy: 'network-only' });
+            setLoading(false);
+        }, 2000);
+
+    };
 
     const handleCloseModal = () => {
         setOpenModal(false);
@@ -106,40 +107,10 @@ export const Vouchers = (propos) => {
             payload = ethers.utils.hexDataSlice(payload, 4);
             try {
                 switch (selector) {
-                    case '0xa9059cbb': {
-                        // erc20 transfer; 
-                        const decode = decoder.decode(["address", "uint256"], payload);
-                        payload = `Erc20 Transfer - Amount: ${ethers.utils.formatEther(decode[1])} - Address: ${decode[0]}`;
-                        break;
-                    }
-                    case '0x42842e0e': {
-                        //erc721 safe transfer;
-                        const decode = decoder.decode(["address", "address", "uint256"], payload);
-                        payload = `Erc721 Transfer - Id: ${decode[2]} - Address: ${decode[1]}`;
-                        break;
-                    }
                     case '0x522f6815': {
                         //ether transfer; 
                         const decode2 = decoder.decode(["address", "uint256"], payload)
-                        payload = `Ether Transfer - Amount: ${ethers.utils.formatEther(decode2[1])} (Native eth) - Address: ${decode2[0]}`;
-                        break;
-                    }
-                    case '0xd0def521': {
-                        //erc721 mint;
-                        const decode = decoder.decode(["address", "string"], payload);
-                        payload = `Mint Erc721 - String: ${decode[1]} - Address: ${decode[0]}`;
-                        break;
-                    }
-                    case '0x755edd17': {
-                        //erc721 mintTo;
-                        const decode = decoder.decode(["address"], payload);
-                        payload = `Mint Erc721 - Address: ${decode[0]}`;
-                        break;
-                    }
-                    case '0x6a627842': {
-                        //erc721 mint;
-                        const decode = decoder.decode(["address"], payload);
-                        payload = `Mint Erc721 - Address: ${decode[0]}`;
+                        payload = {amount: ethers.utils.formatEther(decode2[1]), address: decode2[0]};
                         break;
                     }
                     default: {
@@ -156,7 +127,8 @@ export const Vouchers = (propos) => {
             id: `${n?.id}`,
             index: parseInt(n?.index),
             destination: `${n?.destination ?? ""}`,
-            payload: `${payload}`,
+            amount: `${payload?.amount ?? ""}`,
+            address: `${payload?.address ?? ""}`,
             input: n ? { index: n.input.index, payload: inputPayload } : {},
             proof: null,
             executed: null,
@@ -170,57 +142,79 @@ export const Vouchers = (propos) => {
     }) ?? [];
 
     return (
-        <div>
-            {/* Your existing JSX */}
-            <Button onClick={handleOpenModal} style={{ color: "#59a14e" }}>Withdraw</Button>
-            <Dialog open={openModal} onClose={handleCloseModal}>
-                <DialogTitle>Voucher List</DialogTitle>
-                <DialogContent>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Index</TableCell>
-                                <TableCell>Action</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {vouchers.length === 0 && (
-                                <TableRow>
-                                <TableCell colSpan={2}>
-                                  <Grid container alignItems="center" justifyContent="center">
-                                    {loading ? <CircularProgress /> : 'No vouchers found'}
-                                  </Grid>
-                                </TableCell>
-                                <TableCell>
-                                  <Grid container alignItems="center" justifyContent="center">
-                                    <Button disabled={loading} onClick={() => handleReload()}>
-                                    {loading ? 'Loading...' : 'Reload'}
-                                    </Button>
-                                  </Grid>
-                                </TableCell>
-                              </TableRow>
-                            )}
-                            {vouchers.length > 0 && (
-                                vouchers.map((voucher) => (
-                                    <TableRow key={voucher.id}>
-                                        <TableCell>{voucher.id}</TableCell>
-                                        <TableCell>{voucher.index}</TableCell>
-                                        <TableCell>
-                                            <Button style={{ color: "#fdad00" }} disabled={vouchers.length === 0} onClick={() => executeVoucher(vouchers[0])}>Withdraw</Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            )}
-
-                        </TableBody>
-                    </Table>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseModal}>Close</Button>
-                </DialogActions>
-            </Dialog>
+        <div style={{ width: "fit-content"}}>
+          <Typography variant="h6" gutterBottom>
+            Voucher to execute
+          </Typography>
+      
+          {voucherToExecute ? (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Input Index</TableCell>
+                  <TableCell>Voucher Index</TableCell>
+                  <TableCell>Destination</TableCell>
+                  <TableCell>Action</TableCell>
+                  <TableCell>Input Payload</TableCell>
+                  <TableCell>Msg</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow key={`${voucherToExecute.input.index}-${voucherToExecute.index}`}>
+                  <TableCell>{voucherToExecute.input.index}</TableCell>
+                  <TableCell>{voucherToExecute.index}</TableCell>
+                  <TableCell>{voucherToExecute.destination}</TableCell>
+                  <TableCell>
+                    <Button disabled={!voucherToExecute.proof || voucherToExecute.executed} onClick={() => executeVoucher(voucherToExecute)}>
+                      {voucherToExecute.proof ? (voucherToExecute.executed ? "Voucher executed" : "Execute voucher") : "No proof yet"}
+                    </Button>
+                  </TableCell>
+                  <TableCell>{voucherToExecute.input.payload}</TableCell>
+                  <TableCell>{voucherToExecute.msg}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          ) : (
+            <Typography>Nothing yet</Typography>
+          )}
+      
+          <Button onClick={() => reexecuteQuery({ requestPolicy: 'network-only' })}>
+            Reload
+          </Button>
+      
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Input Index</TableCell>
+                <TableCell>Voucher Index</TableCell>
+                <TableCell>Destination</TableCell>
+                <TableCell>Action</TableCell>
+                <TableCell>Address</TableCell>
+                <TableCell>Amount (ETH)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {vouchers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={4}>no vouchers</TableCell>
+                </TableRow>
+              ) : (
+                vouchers.map((n) => (
+                  <TableRow key={`${n.input.index}-${n.index}`}>
+                    <TableCell>{n.input.index}</TableCell>
+                    <TableCell>{n.index}</TableCell>
+                    <TableCell>{n.destination}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => getProof(n)}>Get Proof</Button>
+                    </TableCell>
+                    <TableCell>{n.address}</TableCell>
+                    <TableCell>{n.amount}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         </div>
-    );
+      );
 };
 

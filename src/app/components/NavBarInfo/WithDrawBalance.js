@@ -7,7 +7,8 @@ import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { Vouchers } from "../Cartesi/graphql/vouchers";
-
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 const WithdrawDialog = ({
   open,
   handleClose,
@@ -31,17 +32,25 @@ const WithdrawDialog = ({
       disableBackdropClick={isAddingBalance}
       onClose={handleClose}
       disableEscapeKeyDown={isAddingBalance}
+      style={{ textAlign: "center" }}
+      maxWidth="xl"
     >
-      <DialogTitle>Withdraw </DialogTitle>
+      <DialogTitle>Vouchers</DialogTitle>
+      <IconButton
+          aria-label="close"
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
       <DialogContent>
-        <DialogContentText>
-          Are you sure you want to withdraw?
-        </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} style={{ color: "#840000" }}>
-          Cancel
-        </Button>
           <Vouchers dappAddress={dappAddress} />
       </DialogActions>
     </Dialog>
